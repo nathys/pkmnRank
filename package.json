@@ -5,6 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "dev:pages": "wrangler pages dev public --d1=DB",
+    "deploy": "wrangler pages deploy public",
+    "db:create": "wrangler d1 create pkmnrank-ratings",
+    "db:migrate": "wrangler d1 execute pkmnrank-ratings --file=schema.sql",
+    "db:migrate:remote": "wrangler d1 execute pkmnrank-ratings --remote --file=schema.sql",
     "fetch-pokemon": "node scripts/fetchPokemon.js",
     "fetch-forms": "node scripts/fetchForms.js"
   },
@@ -14,5 +19,8 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
   }
 }
