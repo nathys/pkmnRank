@@ -1,8 +1,0 @@
-name = "pkmnrank"
-compatibility_date = "2024-09-23"
-pages_build_output_dir = "public"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "pkmnrank-ratings"
-database_id = "REPLACE_WITH_ID_FROM: wrangler d1 create pkmnrank-ratings"

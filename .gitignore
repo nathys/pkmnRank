@@ -1,4 +1,3 @@
 node_modules/
 db/ratings.json
 .DS_Store
-.wrangler/
