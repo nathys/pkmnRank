@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+.hidden {
+  display: none !important;
+}
+
 body {
   font-family: 'Segoe UI', sans-serif;
   background: url(background.svg) center center / cover fixed no-repeat;
@@ -269,7 +273,7 @@ header h1 a {
 }
 
 #modal-overlay.hidden {
-  display: none;
+  display: none !important;
 }
 
 #modal {
@@ -347,10 +351,34 @@ header h1 a {
   accent-color: #E8952A;
 }
 
-.global-avg {
+.info-icon {
   font-size: 0.75rem;
   color: #a07030;
-  margin-top: 2px;
+  cursor: default;
+  position: relative;
+  display: inline-block;
+}
+
+.info-icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  background: #1e0900;
+  border: 1px solid #3d1a04;
+  color: #fdf0d8;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: pre;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+
+.info-icon:hover::after {
+  opacity: 1;
 }
 
 #modal-save {
@@ -405,6 +433,10 @@ header h1 a {
   border-radius: 16px;
   padding: 89px 32px 36px;
   text-align: center;
+}
+
+#rate-card.complete {
+  padding-top: 36px;
 }
 
 #sprite-wrapper {
@@ -469,17 +501,26 @@ header h1 a {
 
 #rate-complete {
   text-align: center;
-  margin-top: 80px;
   font-size: 1.2rem;
   color: #d4975c;
 }
 
-#rate-complete a {
-  display: inline-block;
-  margin-top: 16px;
-  color: #E8952A;
-  text-decoration: none;
-  font-weight: 600;
+#download-pdf-btn {
+  margin-top: 24px;
+  width: 100%;
+  padding: 14px;
+  background: #E8952A;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#download-pdf-btn:hover {
+  background: #c07030;
 }
 
 /* ── Ratings table ─────────────────────────────────────────────────────────── */

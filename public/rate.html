@@ -28,7 +28,7 @@
 
   <main>
     <div id="rate-card">
-      <div id="rate-pokemon-info">
+      <div id="rate-pokemon-info" class="hidden">
         <div id="sprite-wrapper">
           <canvas id="stat-triangle" width="324" height="324"></canvas>
           <img id="rate-sprite" src="" alt="" />
@@ -38,30 +38,27 @@
         <div id="rate-types" class="type-badges"></div>
       </div>
 
-      <div class="rating-section">
+      <div class="rating-section hidden">
         <div class="rating-row" data-field="battleAbility">
-          <label>Battle Ability <span class="score-display">5</span></label>
+          <label><span class="label-left"><span class="info-icon" data-tip-low="Weak or impractical in battle" data-tip-high="Dominant in competitive play">ℹ</span> Battle Ability</span><span class="score-display">5</span></label>
           <input type="range" min="0" max="10" step="0.5" value="5" data-field="battleAbility" />
-          <div class="global-avg" id="avg-battleAbility"></div>
         </div>
         <div class="rating-row" data-field="appeal">
-          <label>Appeal <span class="score-display">5</span></label>
+          <label><span class="label-left"><span class="info-icon" data-tip-low="Unappealing or forgettable design" data-tip-high="Beautiful or compelling design">ℹ</span> Appeal</span><span class="score-display">5</span></label>
           <input type="range" min="0" max="10" step="0.5" value="5" data-field="appeal" />
-          <div class="global-avg" id="avg-appeal"></div>
         </div>
         <div class="rating-row" data-field="iconicness">
-          <label>Iconicness <span class="score-display">5</span></label>
+          <label><span class="label-left"><span class="info-icon" data-tip-low="Largely unknown or forgettable" data-tip-high="A cultural icon of the franchise">ℹ</span> Iconicness</span><span class="score-display">5</span></label>
           <input type="range" min="0" max="10" step="0.5" value="5" data-field="iconicness" />
-          <div class="global-avg" id="avg-iconicness"></div>
         </div>
       </div>
 
-      <button id="rate-next-btn">Next</button>
-    </div>
+      <button id="rate-next-btn" class="hidden">Next</button>
 
-    <div id="rate-complete" class="hidden">
-      <p>You've rated every Pokémon!</p>
-      <a href="index.html">View your rankings</a>
+      <div id="rate-complete" class="hidden">
+        <p>You've rated every Pokémon!</p>
+        <button id="download-pdf-btn">Download Rankings PDF</button>
+      </div>
     </div>
   </main>
 
