@@ -11,17 +11,9 @@ async function init() {
   allPokemon = pokemon;
   userRatings = ratings;
 
-  updateProgress();
   renderList();
 }
 
-function updateProgress() {
-  const total = allPokemon.length;
-  const rated = Object.keys(userRatings).length;
-  const pct = total ? (rated / total) * 100 : 0;
-  document.getElementById('progress-bar').style.width = pct + '%';
-  document.getElementById('progress-label').textContent = `${rated} / ${total} rated`;
-}
 
 function ratingSum(r) {
   return (r.battleAbility ?? 0) + (r.appeal ?? 0) + (r.iconicness ?? 0);

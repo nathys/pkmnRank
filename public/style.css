@@ -18,8 +18,11 @@ body {
 
 header {
   background: #1e0900;
-  padding: 20px 32px;
+  padding: 20px 32px 32px;
   border-bottom: 2px solid #E8952A;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .header-top {
@@ -156,11 +159,9 @@ header h1 a {
 #filters {
   display: flex;
   gap: 12px;
-  padding: 20px 32px;
+  padding: 16px 0 0;
   flex-wrap: wrap;
   justify-content: center;
-  background: rgba(20, 8, 0, 0.45);
-  backdrop-filter: blur(2px);
 }
 
 #filters select,
@@ -223,7 +224,7 @@ header h1 a {
 
 .poke-card .poke-id {
   font-size: 0.7rem;
-  color: #805828;
+  color: #a07850;
 }
 
 .type-badges {
@@ -257,7 +258,7 @@ header h1 a {
 
 .form-label {
   font-size: 0.75em;
-  color: #604018;
+  color: #a07850;
   font-weight: 400;
 }
 
@@ -320,7 +321,7 @@ header h1 a {
 }
 
 #modal-content .poke-id {
-  color: #805828;
+  color: #a07850;
   font-size: 0.85rem;
 }
 
@@ -465,7 +466,7 @@ header h1 a {
 
 #rate-dex {
   font-size: 0.8rem;
-  color: #604018;
+  color: #a07850;
   margin-top: 8px;
 }
 
@@ -529,7 +530,7 @@ header h1 a {
   max-width: 1040px;
   margin: 0 auto 40px;
   padding: 0 20px 20px;
-  background: rgba(20, 8, 0, 0.55);
+  background: rgba(50, 20, 0, 0.55);
   border-radius: 12px;
   backdrop-filter: blur(2px);
 }
@@ -569,11 +570,11 @@ header h1 a {
 }
 
 .row-unrated td {
-  color: #4e3010;
+  color: #a07850;
 }
 
 .rank-num {
-  color: #604018;
+  color: #a07850;
   font-size: 0.8rem;
   width: 40px;
 }
@@ -606,7 +607,7 @@ header h1 a {
 
 .list-dex {
   font-size: 0.7rem;
-  color: #4e3010;
+  color: #a07850;
 }
 
 .total-score {
@@ -615,6 +616,6 @@ header h1 a {
 }
 
 .rating-count {
-  color: #604018;
+  color: #a07850;
   font-size: 0.8rem;
 }
