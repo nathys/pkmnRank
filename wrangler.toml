@@ -5,4 +5,4 @@ pages_build_output_dir = "public"
 [[d1_databases]]
 binding = "DB"
 database_name = "pkmnrank-ratings"
-database_id = "REPLACE_WITH_ID"
+database_id = "ec69cf60-5b56-41f6-b838-24e53c4f7f85"
