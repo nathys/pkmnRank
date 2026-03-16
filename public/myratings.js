@@ -4,7 +4,7 @@ let userRatings = {};
 
 async function init() {
   const [pokemon, ratings] = await Promise.all([
-    fetch('/api/pokemon').then(r => r.json()),
+    fetch('/data/pokemon.json').then(r => r.json()),
     fetch(`/api/ratings/${userId}`).then(r => r.json()),
   ]);
 

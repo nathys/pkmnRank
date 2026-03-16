@@ -3,7 +3,7 @@ let globalAverages = {};
 
 async function init() {
   const [pokemon, averages] = await Promise.all([
-    fetch('/api/pokemon').then(r => r.json()),
+    fetch('/data/pokemon.json').then(r => r.json()),
     fetch('/api/averages').then(r => r.json()),
   ]);
 
