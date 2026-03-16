@@ -1,0 +1,18 @@
+{
+  "name": "pkmnrank",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "fetch-pokemon": "node scripts/fetchPokemon.js",
+    "fetch-forms": "node scripts/fetchForms.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

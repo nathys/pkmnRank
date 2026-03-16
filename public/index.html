@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Ratings — pkmnRank</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="sidebar-overlay"></div>
+  <nav id="sidebar">
+    <button id="sidebar-close">✕</button>
+    <a class="nav-link" href="index.html">My Ratings</a>
+    <a class="nav-link" href="global.html">Global Ratings</a>
+    <a class="nav-link" href="rate.html">Rate</a>
+  </nav>
+
+  <header>
+    <div class="header-top">
+      <button id="sidebar-toggle">&#9776;</button>
+      <div class="site-brand"><h1><a href="index.html">pkmnRank.com</a></h1><svg class="brand-squiggle" viewBox="0 0 120 12" xmlns="http://www.w3.org/2000/svg"><path d="M0,6 C15,0 25,12 40,6 C55,0 65,12 80,6 C95,0 105,12 120,6" fill="none" stroke="#E8952A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+      <span id="progress-label">0 / 0 rated</span>
+    </div>
+  </header>
+
+  <main>
+    <div id="filters">
+      <input id="search" type="text" placeholder="Search Pokémon…" />
+      <select id="filter-gen">
+        <option value="">All Gens</option>
+        <option value="generation-i">Gen I</option>
+        <option value="generation-ii">Gen II</option>
+        <option value="generation-iii">Gen III</option>
+        <option value="generation-iv">Gen IV</option>
+        <option value="generation-v">Gen V</option>
+        <option value="generation-vi">Gen VI</option>
+        <option value="generation-vii">Gen VII</option>
+        <option value="generation-viii">Gen VIII</option>
+        <option value="generation-ix">Gen IX</option>
+      </select>
+      <select id="filter-type">
+        <option value="">All Types</option>
+        <option>Bug</option><option>Dark</option><option>Dragon</option>
+        <option>Electric</option><option>Fairy</option><option>Fighting</option>
+        <option>Fire</option><option>Flying</option><option>Ghost</option>
+        <option>Grass</option><option>Ground</option><option>Ice</option>
+        <option>Normal</option><option>Poison</option><option>Psychic</option>
+        <option>Rock</option><option>Steel</option><option>Water</option>
+      </select>
+      <select id="filter-rated">
+        <option value="">All</option>
+        <option value="rated">Rated</option>
+        <option value="unrated">Unrated</option>
+      </select>
+      <select id="sort-by">
+        <option value="total">Sort: Total</option>
+        <option value="battleAbility">Sort: Battle Ability</option>
+        <option value="appeal">Sort: Appeal</option>
+        <option value="iconicness">Sort: Iconicness</option>
+        <option value="dex">Sort: Dex #</option>
+      </select>
+    </div>
+    <div id="ratings-list"></div>
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="myratings.js"></script>
+</body>
+</html>

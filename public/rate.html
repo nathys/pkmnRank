@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rate — pkmnRank</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="sidebar-overlay"></div>
+  <nav id="sidebar">
+    <button id="sidebar-close">✕</button>
+    <a class="nav-link" href="index.html">My Ratings</a>
+    <a class="nav-link" href="global.html">Global Ratings</a>
+    <a class="nav-link" href="rate.html">Rate</a>
+  </nav>
+
+  <header>
+    <div class="header-top">
+      <button id="sidebar-toggle">&#9776;</button>
+      <div class="site-brand"><h1><a href="index.html">pkmnRank.com</a></h1><svg class="brand-squiggle" viewBox="0 0 120 12" xmlns="http://www.w3.org/2000/svg"><path d="M0,6 C15,0 25,12 40,6 C55,0 65,12 80,6 C95,0 105,12 120,6" fill="none" stroke="#E8952A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    </div>
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+      <span id="progress-label">0 / 0 rated</span>
+    </div>
+  </header>
+
+  <main>
+    <div id="rate-card">
+      <div id="rate-pokemon-info">
+        <div id="sprite-wrapper">
+          <canvas id="stat-triangle" width="324" height="324"></canvas>
+          <img id="rate-sprite" src="" alt="" />
+        </div>
+        <div id="rate-dex"></div>
+        <div id="rate-name"></div>
+        <div id="rate-types" class="type-badges"></div>
+      </div>
+
+      <div class="rating-section">
+        <div class="rating-row" data-field="battleAbility">
+          <label>Battle Ability <span class="score-display">5</span></label>
+          <input type="range" min="0" max="10" step="0.5" value="5" data-field="battleAbility" />
+          <div class="global-avg" id="avg-battleAbility"></div>
+        </div>
+        <div class="rating-row" data-field="appeal">
+          <label>Appeal <span class="score-display">5</span></label>
+          <input type="range" min="0" max="10" step="0.5" value="5" data-field="appeal" />
+          <div class="global-avg" id="avg-appeal"></div>
+        </div>
+        <div class="rating-row" data-field="iconicness">
+          <label>Iconicness <span class="score-display">5</span></label>
+          <input type="range" min="0" max="10" step="0.5" value="5" data-field="iconicness" />
+          <div class="global-avg" id="avg-iconicness"></div>
+        </div>
+      </div>
+
+      <button id="rate-next-btn">Next</button>
+    </div>
+
+    <div id="rate-complete" class="hidden">
+      <p>You've rated every Pokémon!</p>
+      <a href="index.html">View your rankings</a>
+    </div>
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="rate.js"></script>
+</body>
+</html>
