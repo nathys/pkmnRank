@@ -69,7 +69,7 @@ function renderList() {
           const r = userRatings[p.id];
           const dex = String(p.baseId ?? p.id).padStart(4, '0');
           return `
-            <tr class="${r ? 'row-rated' : 'row-unrated'}">
+            <tr class="main-row ${r ? 'row-rated' : 'row-unrated'}">
               <td class="rank-num">${i + 1}</td>
               <td><div class="list-sprite-wrapper"><canvas class="list-sprite-canvas" data-id="${p.id}" width="86" height="86"></canvas><img class="list-sprite" src="${p.sprite || ''}" alt="${p.name}" loading="lazy" /></div></td>
               <td>
@@ -81,6 +81,15 @@ function renderList() {
               <td class="col-detail">${r ? r.iconicness : '—'}</td>
               <td class="total-score">${r ? ratingSum(r) : '—'}</td>
             </tr>
+            <tr class="row-expand hidden">
+              <td colspan="4">
+                <div class="expand-grid">
+                  <span>Battle Ability</span><span>${r ? r.battleAbility : '—'}</span>
+                  <span>Appeal</span><span>${r ? r.appeal : '—'}</span>
+                  <span>Iconicness</span><span>${r ? r.iconicness : '—'}</span>
+                </div>
+              </td>
+            </tr>
           `;
         }).join('')}
       </tbody>
@@ -90,6 +99,12 @@ function renderList() {
   container.querySelectorAll('.list-sprite-canvas').forEach(canvas => {
     const r = userRatings[canvas.dataset.id];
     drawStatTriangle(canvas, r ? [r.battleAbility, r.appeal, r.iconicness] : null);
+  });
+
+  container.querySelectorAll('.main-row').forEach(row => {
+    row.addEventListener('click', () => {
+      row.nextElementSibling.classList.toggle('hidden');
+    });
   });
 }
 

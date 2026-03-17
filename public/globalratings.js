@@ -66,7 +66,7 @@ function renderList() {
           const avg = globalAverages[p.id];
           const dex = String(p.baseId ?? p.id).padStart(4, '0');
           return `
-            <tr class="${avg ? 'row-rated' : 'row-unrated'}">
+            <tr class="main-row ${avg ? 'row-rated' : 'row-unrated'}">
               <td class="rank-num">${i + 1}</td>
               <td><div class="list-sprite-wrapper"><canvas class="list-sprite-canvas" data-id="${p.id}" width="86" height="86"></canvas><img class="list-sprite" src="${p.sprite || ''}" alt="${p.name}" loading="lazy" /></div></td>
               <td>
@@ -79,6 +79,16 @@ function renderList() {
               <td class="total-score">${avg ? avgSum(avg).toFixed(2) : '—'}</td>
               <td class="col-detail rating-count">${avg ? avg.count : '—'}</td>
             </tr>
+            <tr class="row-expand hidden">
+              <td colspan="4">
+                <div class="expand-grid">
+                  <span>Battle Ability</span><span>${avg ? avg.battleAbility : '—'}</span>
+                  <span>Appeal</span><span>${avg ? avg.appeal : '—'}</span>
+                  <span>Iconicness</span><span>${avg ? avg.iconicness : '—'}</span>
+                  <span>Ratings</span><span>${avg ? avg.count : '—'}</span>
+                </div>
+              </td>
+            </tr>
           `;
         }).join('')}
       </tbody>
@@ -88,6 +98,12 @@ function renderList() {
   container.querySelectorAll('.list-sprite-canvas').forEach(canvas => {
     const avg = globalAverages[canvas.dataset.id];
     drawStatTriangle(canvas, avg ? [avg.battleAbility, avg.appeal, avg.iconicness] : null);
+  });
+
+  container.querySelectorAll('.main-row').forEach(row => {
+    row.addEventListener('click', () => {
+      row.nextElementSibling.classList.toggle('hidden');
+    });
   });
 }
 

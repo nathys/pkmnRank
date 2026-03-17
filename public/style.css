@@ -620,7 +620,36 @@ header h1 a {
   font-size: 0.8rem;
 }
 
+.row-expand {
+  display: none;
+}
+
+.expand-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+}
+
+.expand-grid span:nth-child(odd) {
+  color: #a07850;
+}
+
+.expand-grid span:nth-child(even) {
+  font-weight: 600;
+  color: #fdf0d8;
+}
+
+.main-row {
+  cursor: pointer;
+}
+
 @media (max-width: 600px) {
+  .row-expand:not(.hidden) {
+    display: table-row;
+  }
+
   .col-detail {
     display: none;
   }
