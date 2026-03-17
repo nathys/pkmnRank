@@ -103,7 +103,10 @@ function renderList() {
 
   container.querySelectorAll('.main-row').forEach(row => {
     row.addEventListener('click', () => {
-      row.nextElementSibling.classList.toggle('hidden');
+      const detail = row.nextElementSibling;
+      const isOpen = !detail.classList.contains('hidden');
+      container.querySelectorAll('.row-expand').forEach(r => r.classList.add('hidden'));
+      if (!isOpen) detail.classList.remove('hidden');
     });
   });
 }
