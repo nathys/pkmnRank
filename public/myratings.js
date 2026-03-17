@@ -58,9 +58,9 @@ function renderList() {
           <th>#</th>
           <th></th>
           <th>Name</th>
-          <th>Battle Ability</th>
-          <th>Appeal</th>
-          <th>Iconicness</th>
+          <th class="col-detail">Battle Ability</th>
+          <th class="col-detail">Appeal</th>
+          <th class="col-detail">Iconicness</th>
           <th>Total</th>
         </tr>
       </thead>
@@ -76,9 +76,9 @@ function renderList() {
                 <div class="list-dex">#${dex}</div>
                 ${nameHTML(p, allPokemon)}
               </td>
-              <td>${r ? r.battleAbility : '—'}</td>
-              <td>${r ? r.appeal : '—'}</td>
-              <td>${r ? r.iconicness : '—'}</td>
+              <td class="col-detail">${r ? r.battleAbility : '—'}</td>
+              <td class="col-detail">${r ? r.appeal : '—'}</td>
+              <td class="col-detail">${r ? r.iconicness : '—'}</td>
               <td class="total-score">${r ? ratingSum(r) : '—'}</td>
             </tr>
           `;

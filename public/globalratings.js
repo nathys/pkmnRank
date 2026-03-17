@@ -54,11 +54,11 @@ function renderList() {
           <th>#</th>
           <th></th>
           <th>Name</th>
-          <th>Battle Ability</th>
-          <th>Appeal</th>
-          <th>Iconicness</th>
+          <th class="col-detail">Battle Ability</th>
+          <th class="col-detail">Appeal</th>
+          <th class="col-detail">Iconicness</th>
           <th>Total</th>
-          <th>Ratings</th>
+          <th class="col-detail">Ratings</th>
         </tr>
       </thead>
       <tbody>
@@ -73,11 +73,11 @@ function renderList() {
                 <div class="list-dex">#${dex}</div>
                 ${nameHTML(p, allPokemon)}
               </td>
-              <td>${avg ? avg.battleAbility : '—'}</td>
-              <td>${avg ? avg.appeal : '—'}</td>
-              <td>${avg ? avg.iconicness : '—'}</td>
+              <td class="col-detail">${avg ? avg.battleAbility : '—'}</td>
+              <td class="col-detail">${avg ? avg.appeal : '—'}</td>
+              <td class="col-detail">${avg ? avg.iconicness : '—'}</td>
               <td class="total-score">${avg ? avgSum(avg).toFixed(2) : '—'}</td>
-              <td class="rating-count">${avg ? avg.count : '—'}</td>
+              <td class="col-detail rating-count">${avg ? avg.count : '—'}</td>
             </tr>
           `;
         }).join('')}

@@ -619,3 +619,34 @@ header h1 a {
   color: #a07850;
   font-size: 0.8rem;
 }
+
+@media (max-width: 600px) {
+  .col-detail {
+    display: none;
+  }
+
+  .list-sprite-wrapper {
+    width: 48px;
+    height: 48px;
+  }
+
+  .list-sprite-canvas {
+    width: 48px;
+    height: 48px;
+  }
+
+  .list-sprite {
+    width: 32px;
+    height: 32px;
+    top: 5px;
+  }
+
+  .ratings-table td {
+    padding: 6px 8px;
+    height: 60px;
+  }
+
+  .ratings-table th {
+    padding: 8px;
+  }
+}
