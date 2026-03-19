@@ -12,6 +12,13 @@ function shuffleQueue() {
   currentIndex = 0;
 }
 
+function preloadImages(startIndex, count = 5) {
+  for (let i = startIndex; i < Math.min(startIndex + count, queue.length); i++) {
+    const img = new Image();
+    img.src = queue[i].sprite || '';
+  }
+}
+
 async function init() {
   const [pokemon, ratings] = await Promise.all([
     fetch('/data/pokemon.json').then(r => r.json()),
@@ -23,6 +30,7 @@ async function init() {
 
   queue = allPokemon.filter(p => !userRatings[p.id]);
   shuffleQueue();
+  preloadImages(0);
 
   updateProgress();
   showCurrent();
@@ -151,6 +159,7 @@ async function saveAndNext() {
     const { rating } = await res.json();
     userRatings[p.id] = rating;
     currentIndex++;
+    preloadImages(currentIndex + 1);
     updateProgress();
     showCurrent();
   }
