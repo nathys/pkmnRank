@@ -727,52 +727,67 @@ header h1 a {
 }
 
 @media (max-width: 600px) {
-  .pyramid-card {
+  .pyramid-row {
     gap: 6px;
   }
 
+  /* Stack rank above sprite instead of side-by-side so cards are narrow enough
+     to fit 4 across on a small screen without overflowing. */
+  .pyramid-card {
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    max-width: 72px;
+  }
+
+  .pyramid-card-large {
+    max-width: 110px;
+  }
+
   .pyramid-rank {
-    font-size: 0.8rem;
-    min-width: 26px;
+    font-size: 0.75rem;
+    min-width: unset;
+    text-align: center;
   }
 
   .pyramid-card-large .pyramid-rank {
-    font-size: 1.1rem;
-    min-width: 36px;
+    font-size: 1rem;
+    min-width: unset;
   }
 
   .pyramid-sprite-wrapper {
-    width: 90px;
-    height: 90px;
-  }
-
-  .pyramid-card-large .pyramid-sprite-wrapper {
-    width: 120px;
-    height: 120px;
-  }
-
-  .pyramid-sprite-canvas {
-    width: 90px;
-    height: 90px;
-  }
-
-  .pyramid-card-large .pyramid-sprite-canvas {
-    width: 120px;
-    height: 120px;
-  }
-
-  .pyramid-sprite {
     width: 68px;
     height: 68px;
   }
 
+  .pyramid-card-large .pyramid-sprite-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .pyramid-sprite-canvas {
+    width: 68px;
+    height: 68px;
+  }
+
+  .pyramid-card-large .pyramid-sprite-canvas {
+    width: 100px;
+    height: 100px;
+  }
+
+  .pyramid-sprite {
+    width: 52px;
+    height: 52px;
+  }
+
   .pyramid-card-large .pyramid-sprite {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
   }
 
   .pyramid-name {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
+    text-align: center;
   }
 }
 
