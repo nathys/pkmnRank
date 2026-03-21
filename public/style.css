@@ -164,6 +164,41 @@ header h1 a {
   justify-content: center;
 }
 
+.filter-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.filter-clear-x {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #a07850;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+/* For selects: stay left of the native dropdown arrow (~20px wide) */
+.filter-wrap:has(select) .filter-clear-x {
+  right: 24px;
+}
+
+/* For inputs: no dropdown arrow, flush to the right edge */
+.filter-wrap:has(input) .filter-clear-x {
+  right: 6px;
+}
+
+.filter-clear-x:hover {
+  color: #fdf0d8;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 #filters select,
 #filters input {
   background: #1e0900;
@@ -173,6 +208,15 @@ header h1 a {
   border-radius: 6px;
   font-size: 0.9rem;
   outline: none;
+}
+
+/* Pad right to make room for the x button when active */
+.filter-wrap:has(.filter-clear-x:not(.hidden)) select {
+  padding-right: 46px; /* x button (18px) + gap + dropdown arrow (20px) */
+}
+
+.filter-wrap:has(.filter-clear-x:not(.hidden)) input {
+  padding-right: 26px;
 }
 
 #filters input {

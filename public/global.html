@@ -22,38 +22,49 @@
       <div class="site-brand"><h1><a href="index.html">pkmnRank.com</a></h1><svg class="brand-squiggle" viewBox="0 0 120 12" xmlns="http://www.w3.org/2000/svg"><path d="M0,6 C15,0 25,12 40,6 C55,0 65,12 80,6 C95,0 105,12 120,6" fill="none" stroke="#E8952A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     </div>
     <div id="filters">
-      <input id="search" type="text" placeholder="Search Pokémon…" />
-      <select id="filter-gen">
-        <option value="">All Gens</option>
-        <option value="generation-i">Gen I</option>
-        <option value="generation-ii">Gen II</option>
-        <option value="generation-iii">Gen III</option>
-        <option value="generation-iv">Gen IV</option>
-        <option value="generation-v">Gen V</option>
-        <option value="generation-vi">Gen VI</option>
-        <option value="generation-vii">Gen VII</option>
-        <option value="generation-viii">Gen VIII</option>
-        <option value="generation-ix">Gen IX</option>
-      </select>
-      <select id="filter-type">
-        <option value="">All Types</option>
-        <option>Bug</option><option>Dark</option><option>Dragon</option>
-        <option>Electric</option><option>Fairy</option><option>Fighting</option>
-        <option>Fire</option><option>Flying</option><option>Ghost</option>
-        <option>Grass</option><option>Ground</option><option>Ice</option>
-        <option>Normal</option><option>Poison</option><option>Psychic</option>
-        <option>Rock</option><option>Steel</option><option>Water</option>
-      </select>
-      <select id="filter-type2" class="hidden">
-        <option value="">+ Second Type</option>
-        <option>Bug</option><option>Dark</option><option>Dragon</option>
-        <option>Electric</option><option>Fairy</option><option>Fighting</option>
-        <option>Fire</option><option>Flying</option><option>Ghost</option>
-        <option>Grass</option><option>Ground</option><option>Ice</option>
-        <option>Normal</option><option>Poison</option><option>Psychic</option>
-        <option>Rock</option><option>Steel</option><option>Water</option>
-      </select>
-
+      <div class="filter-wrap">
+        <input id="search" type="text" placeholder="Search Pokémon…" />
+        <button class="filter-clear-x hidden" id="clear-search" title="Clear search">✕</button>
+      </div>
+      <div class="filter-wrap">
+        <select id="filter-gen">
+          <option value="">All Gens</option>
+          <option value="generation-i">Gen I</option>
+          <option value="generation-ii">Gen II</option>
+          <option value="generation-iii">Gen III</option>
+          <option value="generation-iv">Gen IV</option>
+          <option value="generation-v">Gen V</option>
+          <option value="generation-vi">Gen VI</option>
+          <option value="generation-vii">Gen VII</option>
+          <option value="generation-viii">Gen VIII</option>
+          <option value="generation-ix">Gen IX</option>
+        </select>
+        <button class="filter-clear-x hidden" id="clear-gen" title="Clear generation">✕</button>
+      </div>
+      <div class="filter-wrap">
+        <select id="filter-type">
+          <option value="">All Types</option>
+          <option>Bug</option><option>Dark</option><option>Dragon</option>
+          <option>Electric</option><option>Fairy</option><option>Fighting</option>
+          <option>Fire</option><option>Flying</option><option>Ghost</option>
+          <option>Grass</option><option>Ground</option><option>Ice</option>
+          <option>Normal</option><option>Poison</option><option>Psychic</option>
+          <option>Rock</option><option>Steel</option><option>Water</option>
+        </select>
+        <button class="filter-clear-x hidden" id="clear-type" title="Clear type">✕</button>
+      </div>
+      <div class="filter-wrap hidden" id="filter-type2-wrap">
+        <select id="filter-type2">
+          <option value="">+ Second Type</option>
+          <option>Bug</option><option>Dark</option><option>Dragon</option>
+          <option>Electric</option><option>Fairy</option><option>Fighting</option>
+          <option>Fire</option><option>Flying</option><option>Ghost</option>
+          <option>Grass</option><option>Ground</option><option>Ice</option>
+          <option>Normal</option><option>Poison</option><option>Psychic</option>
+          <option>Rock</option><option>Steel</option><option>Water</option>
+        </select>
+        <button class="filter-clear-x hidden" id="clear-type2" title="Clear second type">✕</button>
+      </div>
       <select id="sort-by">
         <option value="total">Sort: Total</option>
         <option value="battleAbility">Sort: Battle Ability</option>

@@ -1,14 +1,8 @@
 let allPokemon = [];
 let wolfeRankings = [];
 let pokemonById = {};
-const ALL_TYPES = ['Bug','Dark','Dragon','Electric','Fairy','Fighting','Fire','Flying','Ghost','Grass','Ground','Ice','Normal','Poison','Psychic','Rock','Steel','Water'];
-const ALL_GENS = [
-  { value: 'generation-i', label: 'Gen I' }, { value: 'generation-ii', label: 'Gen II' },
-  { value: 'generation-iii', label: 'Gen III' }, { value: 'generation-iv', label: 'Gen IV' },
-  { value: 'generation-v', label: 'Gen V' }, { value: 'generation-vi', label: 'Gen VI' },
-  { value: 'generation-vii', label: 'Gen VII' }, { value: 'generation-viii', label: 'Gen VIII' },
-  { value: 'generation-ix', label: 'Gen IX' },
-];
+// Populated in init(); used by pool functions to restrict filters to ranked pokemon only.
+let rankedIds = new Set();
 
 async function init() {
   const [pokemon, rankings] = await Promise.all([
@@ -19,10 +13,11 @@ async function init() {
   allPokemon = pokemon;
   wolfeRankings = rankings;
   pokemonById = Object.fromEntries(pokemon.map(p => [p.id, p]));
+  rankedIds = new Set(rankings.map(r => r.id));
 
   renderPyramid();
-  refreshGenFilter();
-  refreshTypeFilters();
+  refreshGenFilter(getGenPool());
+  refreshTypeFilters(getPool());
   renderList();
 }
 
@@ -117,7 +112,7 @@ function renderList() {
                 <div class="list-dex">#${dex}</div>
                 ${nameHTML(p, allPokemon)}
               </td>
-              <td class="col-detail" style="color:#a07850">#${dex}</td>
+              <td class="col-detail list-dex">#${dex}</td>
             </tr>
           `;
         }).join('')}
@@ -136,10 +131,17 @@ function updateClearButton() {
   document.getElementById('clear-filters').classList.toggle('hidden', !active);
 }
 
+function updateFilterXButtons() {
+  const { search, gen, type, type2 } = getFilters();
+  document.getElementById('clear-search').classList.toggle('hidden', !search);
+  document.getElementById('clear-gen').classList.toggle('hidden', !gen);
+  document.getElementById('clear-type').classList.toggle('hidden', !type);
+  document.getElementById('clear-type2').classList.toggle('hidden', !type2);
+}
+
+// Pool for gen dropdown: ranked pokemon matching current search + type filters.
 function getPool() {
-  const search = document.getElementById('search').value.trim().toLowerCase();
-  const gen = document.getElementById('filter-gen').value;
-  const rankedIds = new Set(wolfeRankings.map(r => r.id));
+  const { search, gen } = getFilters();
   return allPokemon.filter(p => {
     if (!rankedIds.has(p.id)) return false;
     if (search && !p.name.toLowerCase().includes(search)) return false;
@@ -148,11 +150,9 @@ function getPool() {
   });
 }
 
+// Pool for type dropdown: ranked pokemon matching current search + gen filters.
 function getGenPool() {
-  const search = document.getElementById('search').value.trim().toLowerCase();
-  const type = document.getElementById('filter-type').value;
-  const type2 = document.getElementById('filter-type2').value;
-  const rankedIds = new Set(wolfeRankings.map(r => r.id));
+  const { search, type, type2 } = getFilters();
   return allPokemon.filter(p => {
     if (!rankedIds.has(p.id)) return false;
     if (search && !p.name.toLowerCase().includes(search)) return false;
@@ -163,76 +163,51 @@ function getGenPool() {
   });
 }
 
-function refreshGenFilter() {
-  const present = new Set(getGenPool().map(p => p.generation));
-  const genEl = document.getElementById('filter-gen');
-  const prev = genEl.value;
-  genEl.innerHTML = '<option value="">All Gens</option>' +
-    ALL_GENS.filter(g => present.has(g.value))
-      .map(g => `<option value="${g.value}">${g.label}</option>`).join('');
-  genEl.value = present.has(prev) ? prev : '';
-}
-
-function refreshType2Filter(pool) {
-  const type = document.getElementById('filter-type').value;
-  const type2El = document.getElementById('filter-type2');
-  if (!type) { type2El.value = ''; type2El.classList.add('hidden'); return; }
-  const withType = pool.filter(p => p.types.includes(type));
-  const secondary = new Set();
-  withType.forEach(p => p.types.forEach(t => { if (t !== type) secondary.add(t); }));
-  const hasMono = withType.some(p => p.types.length === 1);
-  const prev = type2El.value;
-  type2El.innerHTML =
-    '<option value="">+ Second Type</option>' +
-    (hasMono ? '<option value="mono">Mono-type</option>' : '') +
-    ALL_TYPES.filter(t => secondary.has(t)).map(t => `<option>${t}</option>`).join('');
-  const valid = new Set(['', 'mono', ...secondary]);
-  type2El.value = valid.has(prev) ? prev : '';
-  type2El.classList.remove('hidden');
-}
-
-function refreshTypeFilters() {
-  const pool = getPool();
-  const present = new Set();
-  pool.forEach(p => p.types.forEach(t => present.add(t)));
-  const typeEl = document.getElementById('filter-type');
-  const prev = typeEl.value;
-  typeEl.innerHTML = '<option value="">All Types</option>' +
-    ALL_TYPES.filter(t => present.has(t)).map(t => `<option>${t}</option>`).join('');
-  if (prev && !present.has(prev)) {
-    typeEl.value = '';
-    const type2El = document.getElementById('filter-type2');
-    type2El.value = ''; type2El.classList.add('hidden');
-  } else {
-    typeEl.value = prev;
-    if (prev) refreshType2Filter(pool);
-  }
-}
-
 function clearFilters() {
   document.getElementById('search').value = '';
   document.getElementById('filter-gen').value = '';
   document.getElementById('filter-type').value = '';
   document.getElementById('filter-type2').value = '';
-  document.getElementById('filter-type2').classList.add('hidden');
-  refreshGenFilter();
-  refreshTypeFilters();
+  document.getElementById('filter-type2-wrap').classList.add('hidden');
+  refreshGenFilter(getGenPool());
+  refreshTypeFilters(getPool());
   renderList();
   updateClearButton();
+  updateFilterXButtons();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function onTypeChange() {
   refreshType2Filter(getPool());
-  refreshGenFilter();
+  refreshGenFilter(getGenPool());
   renderList();
   updateClearButton();
+  updateFilterXButtons();
 }
 
-document.getElementById('search').addEventListener('input', () => { refreshGenFilter(); refreshTypeFilters(); renderList(); updateClearButton(); });
-document.getElementById('filter-gen').addEventListener('change', () => { refreshTypeFilters(); renderList(); updateClearButton(); });
+document.getElementById('search').addEventListener('input', () => { refreshGenFilter(getGenPool()); refreshTypeFilters(getPool()); renderList(); updateClearButton(); updateFilterXButtons(); });
+document.getElementById('filter-gen').addEventListener('change', () => { refreshTypeFilters(getPool()); renderList(); updateClearButton(); updateFilterXButtons(); });
 document.getElementById('filter-type').addEventListener('change', onTypeChange);
-document.getElementById('filter-type2').addEventListener('change', () => { refreshGenFilter(); renderList(); updateClearButton(); });
+document.getElementById('filter-type2').addEventListener('change', () => { refreshGenFilter(getGenPool()); renderList(); updateClearButton(); updateFilterXButtons(); });
 document.getElementById('clear-filters').addEventListener('click', clearFilters);
+
+document.getElementById('clear-search').addEventListener('click', () => {
+  document.getElementById('search').value = '';
+  refreshGenFilter(getGenPool()); refreshTypeFilters(getPool()); renderList(); updateClearButton(); updateFilterXButtons();
+});
+document.getElementById('clear-gen').addEventListener('click', () => {
+  document.getElementById('filter-gen').value = '';
+  refreshTypeFilters(getPool()); renderList(); updateClearButton(); updateFilterXButtons();
+});
+document.getElementById('clear-type').addEventListener('click', () => {
+  document.getElementById('filter-type').value = '';
+  document.getElementById('filter-type2').value = '';
+  document.getElementById('filter-type2-wrap').classList.add('hidden');
+  refreshGenFilter(getGenPool()); renderList(); updateClearButton(); updateFilterXButtons();
+});
+document.getElementById('clear-type2').addEventListener('click', () => {
+  document.getElementById('filter-type2').value = '';
+  refreshGenFilter(getGenPool()); renderList(); updateClearButton(); updateFilterXButtons();
+});
 
 init();

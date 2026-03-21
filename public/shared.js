@@ -1,3 +1,84 @@
+// ── Filter constants ──────────────────────────────────────────────────────────
+// Shared across all list pages (myratings, globalratings, wolferatings).
+const ALL_TYPES = ['Bug','Dark','Dragon','Electric','Fairy','Fighting','Fire','Flying','Ghost','Grass','Ground','Ice','Normal','Poison','Psychic','Rock','Steel','Water'];
+const ALL_GENS = [
+  { value: 'generation-i',    label: 'Gen I'    },
+  { value: 'generation-ii',   label: 'Gen II'   },
+  { value: 'generation-iii',  label: 'Gen III'  },
+  { value: 'generation-iv',   label: 'Gen IV'   },
+  { value: 'generation-v',    label: 'Gen V'    },
+  { value: 'generation-vi',   label: 'Gen VI'   },
+  { value: 'generation-vii',  label: 'Gen VII'  },
+  { value: 'generation-viii', label: 'Gen VIII' },
+  { value: 'generation-ix',   label: 'Gen IX'   },
+];
+
+// ── Shared filter UI helpers ──────────────────────────────────────────────────
+// Each function receives a pre-filtered pool so pages can apply page-specific
+// constraints (e.g. wolferatings limits to ranked Pokémon) before calling.
+
+/**
+ * Rebuilds the gen dropdown to only show generations present in pool.
+ * Restores the previous selection if still valid; clears it otherwise.
+ * @param {object[]} pool - Pokémon objects filtered by current type/search state.
+ */
+function refreshGenFilter(pool) {
+  const present = new Set(pool.map(p => p.generation));
+  const genEl = document.getElementById('filter-gen');
+  const prev = genEl.value;
+  genEl.innerHTML = '<option value="">All Gens</option>' +
+    ALL_GENS.filter(g => present.has(g.value))
+      .map(g => `<option value="${g.value}">${g.label}</option>`).join('');
+  genEl.value = present.has(prev) ? prev : '';
+}
+
+/**
+ * Rebuilds the secondary type dropdown for the Pokémon in pool that match
+ * the currently selected primary type. Hides the dropdown if no primary type
+ * is selected.
+ * @param {object[]} pool - Pokémon objects filtered by current gen/search state.
+ */
+function refreshType2Filter(pool) {
+  const type = document.getElementById('filter-type').value;
+  const type2El = document.getElementById('filter-type2');
+  const type2Wrap = document.getElementById('filter-type2-wrap');
+  if (!type) { type2El.value = ''; type2Wrap.classList.add('hidden'); return; }
+  const withType = pool.filter(p => p.types.includes(type));
+  const secondary = new Set();
+  withType.forEach(p => p.types.forEach(t => { if (t !== type) secondary.add(t); }));
+  const hasMono = withType.some(p => p.types.length === 1);
+  const prev = type2El.value;
+  type2El.innerHTML =
+    '<option value="">+ Second Type</option>' +
+    (hasMono ? '<option value="mono">Mono-type</option>' : '') +
+    ALL_TYPES.filter(t => secondary.has(t)).map(t => `<option>${t}</option>`).join('');
+  const valid = new Set(['', 'mono', ...secondary]);
+  type2El.value = valid.has(prev) ? prev : '';
+  type2Wrap.classList.remove('hidden');
+}
+
+/**
+ * Rebuilds the primary type dropdown to show only types present in pool.
+ * Clears type2 if the previously selected primary type is no longer available.
+ * @param {object[]} pool - Pokémon objects filtered by current gen/search state.
+ */
+function refreshTypeFilters(pool) {
+  const present = new Set();
+  pool.forEach(p => p.types.forEach(t => present.add(t)));
+  const typeEl = document.getElementById('filter-type');
+  const prev = typeEl.value;
+  typeEl.innerHTML = '<option value="">All Types</option>' +
+    ALL_TYPES.filter(t => present.has(t)).map(t => `<option>${t}</option>`).join('');
+  if (prev && !present.has(prev)) {
+    typeEl.value = '';
+    document.getElementById('filter-type2').value = '';
+    document.getElementById('filter-type2-wrap').classList.add('hidden');
+  } else {
+    typeEl.value = prev;
+    if (prev) refreshType2Filter(pool);
+  }
+}
+
 // ── Cookies & User ID ────────────────────────────────────────────────────────
 function getCookie(name) {
   const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));

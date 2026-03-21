@@ -143,20 +143,19 @@ Rank 1133 = worst, Rank 1 = best.
 #1019: Chespin (Line 600)
 #1018: Helioptile (Line 609)
 #1017: Steenee (Line 610)
-#1016: Drizzile [DUPLICATE RANK — same number also used for Sandshrew at Line 650] (Line 613)
+#1016: Drizzile (Line 613)
 #1015: Rolycoly (Line 620)
 #1014: Milcery (Line 622)
-[#1013: SKIPPED — transcript goes from 1014 to 1012]
+#1013: Flittle [IMPLIED — transcript skipped from 1014 to 1012; Flittle placed here by inference]
 #1012: Sunflora (Line 625)
 #1011: Stantler (Line 628)
 #1010: Carkol (Line 630)
 #1009: Oinkologne Male (Line 635)
 #1008: Kakuna (Line 639)
 #1007: Raticate Alolan Form (Line 646)
-#1016*: Sandshrew [DUPLICATE RANK — same number also used for Drizzile at Line 613] (Line 650)
-#1006: Nidorina (Line 656)
-#1005: Nidorino (Line 656)
-[#1004: SKIPPED — transcript goes from 1005 to 1003]
+#1006: Sandshrew [RANK CORRECTED — transcript said 1016 but 1006 was the intended slot] (Line 650)
+#1005: Nidorina [RANK CORRECTED — transcript said 1006] (Line 656)
+#1004: Nidorino [RANK CORRECTED — transcript said 1005] (Line 656)
 #1003: Geodude (Line 662)
 #1002: Grimer (Line 664)
 #1001: Krabby (Line 664)
@@ -688,8 +687,8 @@ Rank 1133 = worst, Rank 1 = best.
 #535: Onix [GARBLED: "Onyx"] (Line 2457)
 #534: Musharna (Line 2463)
 #533: Kabuto (Line 2466)
-#532: Poliwrath [DUPLICATE RANK — same number also used for Mightyena at Line 2468] (Line 2467)
-#532*: Mightyena [DUPLICATE RANK — same number also used for Poliwrath at Line 2467] (Line 2468)
+#532: Poliwrath (Line 2467)
+#531: Mightyena [RANK CORRECTED — transcript said 532 but 531 was skipped] (Line 2468)
 #530: Shiftry (Line 2473)
 #529: Turtwig (Line 2473)
 #528: Runerigus (Line 2473)
@@ -768,9 +767,8 @@ Rank 1133 = worst, Rank 1 = best.
 #465: Marshtomp (Line 2701)
 #464: Feebas (Line 2701)
 #463: Azelf (Line 2703)
-[#462: SKIPPED — transcript goes from 463 to 461]
-#461: Furret [DUPLICATE RANK — same number also used for Luxray at Line 2712] (Line 2708)
-#461*: Luxray [DUPLICATE RANK — same number also used for Furret at Line 2708] (Line 2712)
+#462: Furret [RANK CORRECTED — transcript said 461 but 462 was skipped] (Line 2708)
+#461: Luxray (Line 2712)
 #460: Jigglypuff (Line 2715)
 #459: Rhyhorn (Line 2719)
 #458: Manaphy (Line 2726)
@@ -859,9 +857,8 @@ Rank 1133 = worst, Rank 1 = best.
 #385: Seismitoad (Line 2956)
 #384: Scolipede (Line 2961)
 #383: Haxorus (Line 2964)
-[#382: SKIPPED — transcript goes from 383 to 381]
-#381: Dragalge [GARBLED: "Dragargle"; DUPLICATE RANK — same number also used for Hawlucha] (Line 2970)
-#381*: Hawlucha [DUPLICATE RANK — same number also used for Dragargle at Line 2970] (Line 2975)
+#382: Dragalge [GARBLED: "Dragargle"; RANK CORRECTED — transcript said 381 but 382 was skipped] (Line 2970)
+#381: Hawlucha (Line 2975)
 #380: Goodra (Line 2977)
 #379: Klefki (Line 2983)
 #378: Lycanroc Dusk Form (Line 2985)
@@ -1068,9 +1065,8 @@ Rank 1133 = worst, Rank 1 = best.
 #212: Overqwil (Line 3591)
 #211: Xurkitree (Line 3594)
 #210: Jellicent (Line 3600)
-[#209: SKIPPED — transcript goes from 210 to 208]
-#208: Mandibuzz [DUPLICATE RANK — same number also used for Zygarde 50% at Line 3607] (Line 3604)
-#208*: Zygarde 50% Form [DUPLICATE RANK — same number also used for Mandibuzz at Line 3604] (Line 3607)
+#209: Mandibuzz [RANK CORRECTED — transcript said 208 but 209 was skipped] (Line 3604)
+#208: Zygarde 50% Form (Line 3607)
 #207: Coalossal (Line 3611)
 #206: Regidrago (Line 3614)
 #205: Toedscruel (Line 3614)
@@ -1348,24 +1344,15 @@ Rank 1133 = worst, Rank 1 = best.
 - Line 5690: "Volcaronya" → Volcarona
 
 ### Duplicate Rank Numbers
-- #1016: Drizzile (Line 613) AND Sandshrew (Line 650)
-- #532: Poliwrath (Line 2467) AND Mightyena (Line 2468)
-- #461: Furret (Line 2708) AND Luxray (Line 2712)
-- #381: Dragargle (Line 2970) AND Hawlucha (Line 2975)
-- #208: Mandibuzz (Line 3604) AND Zygarde 50% Form (Line 3607)
 
 ### Skipped Rank Numbers
-- #1013 (transcript goes 1014 → 1012)
-- #1004 (transcript goes 1005 → 1003)
-- #462 (transcript goes 463 → 461)
-- #382 (transcript goes 383 → 381)
-- #209 (transcript goes 210 → 208)
 
 ### Inferred Rankings (not explicitly numbered)
 - #992: Klinklang — starts Trailer Filler category after #993 Baltoy
 - #957: Unfezant — starts Almost Worth Remembering after #958 Pignite
 - #956: Jangmo-o — described as "next" immediately before #955 Veluza
 - #542: Farfetch'd Galarian Form — starts Your Mom Might Know category
+- #1013: Flittle — transcript skipped 1014 → 1012; placed here by inference
 
 ### Additional Garbled Names
 - Line 3274: "Jabite" → Gabite

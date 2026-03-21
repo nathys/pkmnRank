@@ -167,16 +167,9 @@ const OVERRIDES = {
   'alcremie all forms':                869,
   'vivillon all forms':                666,
   // Giratina Origin — correct ID
-  'giratina origin form':              487, // will be overridden below
+  'giratina origin form':              10007,
 };
 
-// Fix Giratina Origin — it IS in pokemon.json as a form
-const giratinaOrigin = pokemon.find(p => p.name === 'Giratina' && p.isForm);
-// Actually Giratina Origin has a different PokeAPI id - let's find it
-const giratinaOriginEntry = pokemon.find(p => p.name && p.name.toLowerCase().includes('giratina') && p.isForm);
-if (giratinaOriginEntry) {
-  OVERRIDES['giratina origin form'] = giratinaOriginEntry.id;
-}
 
 // The full wolfe ranked list: [rank, name, category]
 // Derived from wolfe-ranked-list.md
@@ -304,15 +297,16 @@ const WOLFE_LIST = [
   [1016, 'Drizzile', 'Badge Collectors'],
   [1015, 'Rolycoly', 'Badge Collectors'],
   [1014, 'Milcery', 'Badge Collectors'],
+  [1013, 'Flittle', 'Badge Collectors'], // implied rank — not explicitly numbered in transcript
   [1012, 'Sunflora', 'Badge Collectors'],
   [1011, 'Stantler', 'Badge Collectors'],
   [1010, 'Carkol', 'Badge Collectors'],
   [1009, 'Oinkologne Male', 'Badge Collectors'],
   [1008, 'Kakuna', 'Badge Collectors'],
   [1007, 'Raticate Alolan Form', 'Badge Collectors'],
-  [1016, 'Sandshrew', 'Badge Collectors'],
-  [1006, 'Nidorina', 'Badge Collectors'],
-  [1005, 'Nidorino', 'Badge Collectors'],
+  [1006, 'Sandshrew', 'Badge Collectors'],
+  [1005, 'Nidorina', 'Badge Collectors'],
+  [1004, 'Nidorino', 'Badge Collectors'],
   [1003, 'Geodude', 'Badge Collectors'],
   [1002, 'Grimer', 'Badge Collectors'],
   [1001, 'Krabby', 'Badge Collectors'],
@@ -797,7 +791,7 @@ const WOLFE_LIST = [
   [534, 'Musharna', 'Your Mom Might Know'],
   [533, 'Kabuto', 'Your Mom Might Know'],
   [532, 'Poliwrath', 'Your Mom Might Know'],
-  [532, 'Mightyena', 'Your Mom Might Know'],
+  [531, 'Mightyena', 'Your Mom Might Know'],
   [530, 'Shiftry', 'Your Mom Might Know'],
   [529, 'Turtwig', 'Your Mom Might Know'],
   [528, 'Runerigus', 'Your Mom Might Know'],
@@ -868,7 +862,7 @@ const WOLFE_LIST = [
   [465, 'Marshtomp', 'C-List Celebs'],
   [464, 'Feebas', 'C-List Celebs'],
   [463, 'Azelf', 'C-List Celebs'],
-  [461, 'Furret', 'C-List Celebs'],
+  [462, 'Furret', 'C-List Celebs'],
   [461, 'Luxray', 'C-List Celebs'],
   [460, 'Jigglypuff', 'C-List Celebs'],
   [459, 'Rhyhorn', 'C-List Celebs'],
@@ -950,7 +944,7 @@ const WOLFE_LIST = [
   [385, 'Seismitoad', 'Trying to Be Cool'],
   [384, 'Scolipede', 'Trying to Be Cool'],
   [383, 'Haxorus', 'Trying to Be Cool'],
-  [381, 'Dragalge', 'Trying to Be Cool'],
+  [382, 'Dragalge', 'Trying to Be Cool'],
   [381, 'Hawlucha', 'Trying to Be Cool'],
   [380, 'Goodra', 'Trying to Be Cool'],
   [379, 'Klefki', 'Trying to Be Cool'],
@@ -1130,7 +1124,7 @@ const WOLFE_LIST = [
   [212, 'Overqwil', 'I Make YouTube Shorts When They Win'],
   [211, 'Xurkitree', 'I Make YouTube Shorts When They Win'],
   [210, 'Jellicent', 'I Make YouTube Shorts When They Win'],
-  [208, 'Mandibuzz', 'I Make YouTube Shorts When They Win'],
+  [209, 'Mandibuzz', 'I Make YouTube Shorts When They Win'],
   [208, 'Zygarde 50% Form', 'I Make YouTube Shorts When They Win'],
   [207, 'Coalossal', 'I Make YouTube Shorts When They Win'],
   [206, 'Regidrago', 'I Make YouTube Shorts When They Win'],
@@ -1351,15 +1345,15 @@ const EXTRA = {
   'nidoran♀': 29,
   'type: null': 772,
   'type:null': 772,
-  'jangmo-o': 704,
-  'hakamo-o': 705,
+  'jangmo-o': 782,
+  'hakamo-o': 783,
   'kommo-o': 784,
   'ho-oh': 250,
   'porygon-z': 474,
-  'chien-pao': 1005,
-  'ting-lu': 1001,
-  'chi-yu': 1006,
-  'wo-chien': 1002,
+  'chien-pao': 1002,
+  'ting-lu': 1003,
+  'chi-yu': 1004,
+  'wo-chien': 1001,
   "sirfetch'd": 865,
   "farfetch'd": 83,
   'mr. mime': 122,
