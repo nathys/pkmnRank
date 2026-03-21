@@ -100,6 +100,16 @@ function getUserId() {
   return id;
 }
 
+// ── Type badges ───────────────────────────────────────────────────────────────
+
+/**
+ * Returns the HTML string for a coloured type lozenge.
+ * @param {string} type - Capitalised type name (e.g. "Fire").
+ */
+function typeBadgeHTML(type) {
+  return `<span class="type-badge type-${type}">${type}</span>`;
+}
+
 // ── Name helpers ──────────────────────────────────────────────────────────────
 function parseName(p, allPokemon) {
   if (!p.isForm) return { base: p.name, form: null };

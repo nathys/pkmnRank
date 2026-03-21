@@ -129,7 +129,7 @@ function showCurrent() {
   document.getElementById('rate-name').innerHTML = nameHTML(p, allPokemon);
 
   const typesEl = document.getElementById('rate-types');
-  typesEl.innerHTML = p.types.map(t => `<span class="type-badge type-${t}">${t}</span>`).join('');
+  typesEl.innerHTML = p.types.map(typeBadgeHTML).join('');
 
   // Reset sliders to 5
   document.querySelectorAll('.rating-row input[type="range"]').forEach(input => {

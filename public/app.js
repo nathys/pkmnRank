@@ -104,7 +104,7 @@ function renderGrid() {
       <div class="poke-id">#${String(p.baseId ?? p.id).padStart(4, '0')}</div>
       ${nameHTML(p, true)}
       <div class="type-badges">
-        ${p.types.map(t => `<span class="type-badge type-${t}">${t}</span>`).join('')}
+        ${p.types.map(typeBadgeHTML).join('')}
       </div>
     `;
     card.addEventListener('click', () => openModal(p));
@@ -136,7 +136,7 @@ function openModal(p) {
     <div class="poke-id">#${String(p.baseId ?? p.id).padStart(4, '0')}</div>
     <h2>${nameHTML(p)}</h2>
     <div class="type-badges" style="justify-content:center;margin-top:8px;">
-      ${p.types.map(t => `<span class="type-badge type-${t}">${t}</span>`).join('')}
+      ${p.types.map(typeBadgeHTML).join('')}
     </div>
 
     <div class="rating-section">
