@@ -92,28 +92,32 @@ function downloadPDF() {
   // Wolfe rank lookup by pokemon ID.
   const wolfeRankById = Object.fromEntries(wolfeRankings.map(e => [e.id, e.rank]));
 
-  const sorted = [...allPokemon]
-    .filter(p => userRatings[p.id])
-    .sort((a, b) => ratingSum(userRatings[b.id]) - ratingSum(userRatings[a.id]));
+  // Rated Pokémon sorted by total descending; unrated appended in dex order.
+  const rated   = [...allPokemon].filter(p =>  userRatings[p.id]).sort((a, b) => ratingSum(userRatings[b.id]) - ratingSum(userRatings[a.id]));
+  const unrated = [...allPokemon].filter(p => !userRatings[p.id]).sort((a, b) => a.id - b.id);
+  const sorted  = [...rated, ...unrated];
 
   const rows = sorted.map((p, i) => {
-    const r = userRatings[p.id];
+    const r   = userRatings[p.id];
     const avg = globalAverages[p.id];
     const dex = String(p.baseId ?? p.id).padStart(4, '0');
-    return `<tr>
+    // Unrated rows show dashes for all score columns
+    return `<tr class="${r ? '' : 'unrated'}">
       <td>${i + 1}</td>
       <td>#${dex}</td>
       <td>${p.name}</td>
       <td>${p.types.join(', ')}</td>
-      <td>${r.battleAbility}</td>
-      <td>${r.appeal}</td>
-      <td>${r.iconicness}</td>
-      <td><strong>${ratingSum(r)}</strong></td>
+      <td>${r ? r.battleAbility : '—'}</td>
+      <td>${r ? r.appeal       : '—'}</td>
+      <td>${r ? r.iconicness   : '—'}</td>
+      <td><strong>${r ? ratingSum(r) : '—'}</strong></td>
       <td>${avg ? avgSum(avg).toFixed(2) : '—'}</td>
       <td>${globalRankById[p.id] ?? '—'}</td>
       <td>${wolfeRankById[p.id] ?? '—'}</td>
     </tr>`;
   }).join('');
+
+  const ratedCount = Object.keys(userRatings).length;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -128,12 +132,13 @@ function downloadPDF() {
     th { background: #1e0900; color: #E8952A; text-align: left; padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
     td { padding: 5px 10px; border-bottom: 1px solid #ddd; }
     tr:nth-child(even) td { background: #f9f3eb; }
+    tr.unrated td { color: #aaa; }
     .col-total { font-weight: 700; color: #c07030; }
   </style>
 </head>
 <body>
   <h1>My pkmnRank Rankings</h1>
-  <p>Generated ${new Date().toLocaleDateString()} · ${sorted.length} Pokémon rated</p>
+  <p>Generated ${new Date().toLocaleDateString()} · ${ratedCount} / ${allPokemon.length} Pokémon rated</p>
   <table>
     <thead><tr>
       <th>#</th><th>Dex</th><th>Name</th><th>Types</th>
@@ -151,6 +156,18 @@ function downloadPDF() {
   w.print();
 }
 
+/**
+ * Returns the Serebii pokédex URL for a given Pokémon.
+ * Forms resolve to their base Pokémon's page.
+ * @param {object} p - Pokémon entry from allPokemon.
+ * @returns {string} Serebii URL.
+ */
+function serebiiUrl(p) {
+  const base = p.isForm ? allPokemon.find(b => b.id === p.baseId) : p;
+  const name = (base ? base.name : p.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
+  return `https://www.serebii.net/pokemon/${name}/`;
+}
+
 function showCurrent() {
   if (currentIndex >= queue.length) {
     showComplete();
@@ -162,11 +179,19 @@ function showCurrent() {
   document.getElementById('rate-next-btn').classList.remove('hidden');
 
   const p = queue[currentIndex];
+  const url = serebiiUrl(p);
 
-  document.getElementById('rate-sprite').src = p.sprite || '';
-  document.getElementById('rate-sprite').alt = p.name;
+  // Sprite — clicking opens the Serebii page in a new tab
+  const sprite = document.getElementById('rate-sprite');
+  sprite.src = p.sprite || '';
+  sprite.alt = p.name;
+  sprite.onclick = () => window.open(url, '_blank', 'noopener');
+
   document.getElementById('rate-dex').textContent = '#' + String(p.baseId ?? p.id).padStart(4, '0');
-  document.getElementById('rate-name').innerHTML = nameHTML(p, allPokemon);
+
+  // Name — rendered as a link to the Serebii page
+  document.getElementById('rate-name').innerHTML =
+    `<a href="${url}" target="_blank" rel="noopener" class="serebii-link">${nameHTML(p, allPokemon)}</a>`;
 
   const typesEl = document.getElementById('rate-types');
   typesEl.innerHTML = p.types.map(typeBadgeHTML).join('');

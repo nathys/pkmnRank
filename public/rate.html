@@ -27,7 +27,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="rate-main">
     <div id="rate-card">
       <div id="rate-pokemon-info" class="hidden">
         <div id="sprite-wrapper">
@@ -55,13 +55,15 @@
       </div>
 
       <button id="rate-next-btn" class="hidden">Next</button>
-      <button id="header-pdf-btn" class="hidden">Ratings PDF</button>
 
       <div id="rate-complete" class="hidden">
         <p>You've rated every Pokémon!</p>
         <button id="download-pdf-btn">Download Rankings PDF</button>
       </div>
     </div>
+
+    <!-- Floating PDF button — outside the card, top-right of main -->
+    <button id="header-pdf-btn" class="hidden">Ratings PDF</button>
   </main>
 
   <!-- Welcome modal — shown on first visit or when no ratings exist yet -->
