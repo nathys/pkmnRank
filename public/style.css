@@ -179,6 +179,23 @@ header h1 a {
   min-width: 220px;
 }
 
+.clear-filters-btn {
+  background: none;
+  border: 1px solid #E8952A;
+  color: #E8952A;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.clear-filters-btn:hover {
+  background: #E8952A;
+  color: #1e0900;
+}
+
 #pokemon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -524,9 +541,201 @@ header h1 a {
   background: #c07030;
 }
 
+/* ── Wolfe pyramid ─────────────────────────────────────────────────────────── */
+#global-pyramid,
+#wolfe-pyramid {
+  max-width: 1040px;
+  margin: 0 auto 20px;
+  padding: 24px 20px;
+  background: rgba(50, 20, 0, 0.55);
+  border-radius: 12px;
+  backdrop-filter: blur(2px);
+}
+
+.pyramid-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.pyramid-row:last-child {
+  margin-bottom: 0;
+}
+
+.pyramid-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 200px;
+}
+
+.pyramid-card-large {
+  max-width: 320px;
+}
+
+.pyramid-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pyramid-rank {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #E8952A;
+  min-width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.pyramid-card-large .pyramid-rank {
+  font-size: 1.5rem;
+  min-width: 50px;
+}
+
+.pyramid-sprite-wrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pyramid-card-large .pyramid-sprite-wrapper {
+  width: 180px;
+  height: 180px;
+}
+
+.pyramid-sprite-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  width: 130px;
+  height: 130px;
+}
+
+.pyramid-card-large .pyramid-sprite-canvas {
+  width: 180px;
+  height: 180px;
+}
+
+.pyramid-sprite {
+  position: relative;
+  top: 9px;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+}
+
+.pyramid-row-3 .pyramid-sprite {
+  width: 118px;
+  height: 118px;
+}
+
+.pyramid-row-2 .pyramid-sprite {
+  width: 144px;
+  height: 144px;
+}
+
+.pyramid-card-large .pyramid-sprite {
+  width: 176px;
+  height: 176px;
+}
+
+.pyramid-name {
+  font-size: 0.75rem;
+  color: #fdf0d8;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.pyramid-card-large .pyramid-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.global-pyramid-card {
+  cursor: default;
+}
+
+.pyramid-scores {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 10px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  text-align: left;
+}
+
+.pyramid-scores span:nth-child(odd) {
+  color: #a07850;
+}
+
+.pyramid-scores span:nth-child(even) {
+  font-weight: 600;
+  color: #fdf0d8;
+}
+
+@media (max-width: 600px) {
+  .pyramid-card {
+    gap: 6px;
+  }
+
+  .pyramid-rank {
+    font-size: 0.8rem;
+    min-width: 26px;
+  }
+
+  .pyramid-card-large .pyramid-rank {
+    font-size: 1.1rem;
+    min-width: 36px;
+  }
+
+  .pyramid-sprite-wrapper {
+    width: 90px;
+    height: 90px;
+  }
+
+  .pyramid-card-large .pyramid-sprite-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .pyramid-sprite-canvas {
+    width: 90px;
+    height: 90px;
+  }
+
+  .pyramid-card-large .pyramid-sprite-canvas {
+    width: 120px;
+    height: 120px;
+  }
+
+  .pyramid-sprite {
+    width: 68px;
+    height: 68px;
+  }
+
+  .pyramid-card-large .pyramid-sprite {
+    width: 90px;
+    height: 90px;
+  }
+
+  .pyramid-name {
+    font-size: 0.65rem;
+  }
+}
+
 /* ── Ratings table ─────────────────────────────────────────────────────────── */
 #ratings-list,
-#global-list {
+#global-list,
+#wolfe-list {
   max-width: 1040px;
   margin: 0 auto 40px;
   padding: 0 20px 20px;

@@ -44,6 +44,15 @@
         <option>Normal</option><option>Poison</option><option>Psychic</option>
         <option>Rock</option><option>Steel</option><option>Water</option>
       </select>
+      <select id="filter-type2" class="hidden">
+        <option value="">+ Second Type</option>
+        <option>Bug</option><option>Dark</option><option>Dragon</option>
+        <option>Electric</option><option>Fairy</option><option>Fighting</option>
+        <option>Fire</option><option>Flying</option><option>Ghost</option>
+        <option>Grass</option><option>Ground</option><option>Ice</option>
+        <option>Normal</option><option>Poison</option><option>Psychic</option>
+        <option>Rock</option><option>Steel</option><option>Water</option>
+      </select>
 
       <select id="sort-by">
         <option value="total">Sort: Total</option>
@@ -52,10 +61,12 @@
         <option value="iconicness">Sort: Iconicness</option>
         <option value="dex">Sort: Dex #</option>
       </select>
+      <button id="clear-filters" class="clear-filters-btn hidden">Clear filters</button>
     </div>
   </header>
 
   <main>
+    <div id="global-pyramid"></div>
     <div id="global-list"></div>
   </main>
 
