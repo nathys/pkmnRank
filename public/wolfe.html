@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Global Ratings — pkmnRank</title>
+  <title>Wolfe's Rankings — pkmnRank</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
     <button id="sidebar-close">✕</button>
     <a class="nav-link" href="index.html">My Ratings</a>
     <a class="nav-link" href="global.html">Global Ratings</a>
-    <a class="nav-link" href="wolfe.html">Wolfe's Rankings</a>
+    <a class="nav-link active" href="wolfe.html">Wolfe's Rankings</a>
     <a class="nav-link" href="rate.html">Rate</a>
   </nav>
 
@@ -44,22 +44,18 @@
         <option>Normal</option><option>Poison</option><option>Psychic</option>
         <option>Rock</option><option>Steel</option><option>Water</option>
       </select>
-
       <select id="sort-by">
-        <option value="total">Sort: Total</option>
-        <option value="battleAbility">Sort: Battle Ability</option>
-        <option value="appeal">Sort: Appeal</option>
-        <option value="iconicness">Sort: Iconicness</option>
+        <option value="wolfe">Sort: Wolfe Rank</option>
         <option value="dex">Sort: Dex #</option>
       </select>
     </div>
   </header>
 
   <main>
-    <div id="global-list"></div>
+    <div id="wolfe-list"></div>
   </main>
 
   <script src="shared.js"></script>
-  <script src="globalratings.js"></script>
+  <script src="wolferatings.js"></script>
 </body>
 </html>

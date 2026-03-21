@@ -645,6 +645,29 @@ header h1 a {
   cursor: pointer;
 }
 
+.category-row td {
+  padding: 12px 14px 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #E8952A;
+  font-weight: 700;
+  border-bottom: none;
+  background: none;
+}
+
+.wolfe-rank {
+  font-weight: 700;
+  color: #E8952A;
+  font-size: 0.95rem;
+  width: 56px;
+}
+
+.category-cell {
+  font-size: 0.8rem;
+  color: #a07850;
+}
+
 @media (max-width: 600px) {
   .row-expand:not(.hidden) {
     display: table-row;
