@@ -41,20 +41,21 @@
 
       <div class="rating-section hidden">
         <div class="rating-row" data-field="battleAbility">
-          <label><span class="label-left"><span class="info-icon" data-tip-low="Weak or impractical in battle" data-tip-high="Dominant in competitive play">ℹ</span> Battle Ability</span><span class="score-display">5</span></label>
+          <label><span class="label-left"><span class="info-icon" data-tip-low="Weakest of the Weak, Couldn't win a battle with the world champ difference" data-tip-high="The best of the best, VGC legends or Smogon Staples">ℹ</span> Battle Ability</span><span class="score-display">5</span></label>
           <input type="range" min="0" max="10" step="0.5" value="5" data-field="battleAbility" />
         </div>
         <div class="rating-row" data-field="appeal">
-          <label><span class="label-left"><span class="info-icon" data-tip-low="Unappealing or forgettable design" data-tip-high="Beautiful or compelling design">ℹ</span> Appeal</span><span class="score-display">5</span></label>
+          <label><span class="label-left"><span class="info-icon" data-tip-low="This is not a pokemon, but an abomination" data-tip-high="Peak Pokemon Design">ℹ</span> Appeal</span><span class="score-display">5</span></label>
           <input type="range" min="0" max="10" step="0.5" value="5" data-field="appeal" />
         </div>
         <div class="rating-row" data-field="iconicness">
-          <label><span class="label-left"><span class="info-icon" data-tip-low="Largely unknown or forgettable" data-tip-high="A cultural icon of the franchise">ℹ</span> Iconicness</span><span class="score-display">5</span></label>
+          <label><span class="label-left"><span class="info-icon" data-tip-low="So forgettable, you forgot it existed" data-tip-high="Everyone and your mother knows this pokemon">ℹ</span> Iconicness</span><span class="score-display">5</span></label>
           <input type="range" min="0" max="10" step="0.5" value="5" data-field="iconicness" />
         </div>
       </div>
 
       <button id="rate-next-btn" class="hidden">Next</button>
+      <button id="header-pdf-btn" class="hidden">Ratings PDF</button>
 
       <div id="rate-complete" class="hidden">
         <p>You've rated every Pokémon!</p>
@@ -62,6 +63,41 @@
       </div>
     </div>
   </main>
+
+  <!-- Welcome modal — shown on first visit or when no ratings exist yet -->
+  <div id="welcome-overlay" class="hidden">
+    <div id="welcome-modal">
+      <h2>Welcome to pkmnRank</h2>
+      <p>Rate every Pokémon and and see how your rankings stack up. You can also download your rankings for your own record.</p>
+
+      <div class="welcome-categories">
+        <div class="welcome-category">
+          <div class="welcome-category-name">Battle Ability</div>
+          <div class="welcome-category-range">
+            <span>0: Weakest of the weak. Couldn't win a battle with the world champ difference</span>
+            <span>10: The best of the best. VGC legends &amp; Smogon staples</span>
+          </div>
+        </div>
+        <div class="welcome-category">
+          <div class="welcome-category-name">Appeal</div>
+          <div class="welcome-category-range">
+            <span>0: Not a Pokémon, but an abomination</span>
+            <span>10: Peak Pokémon design</span>
+          </div>
+        </div>
+        <div class="welcome-category">
+          <div class="welcome-category-name">Iconicness</div>
+          <div class="welcome-category-range">
+            <span>0: So forgettable, you forgot it existed</span>
+            <span>10: Everyone and your mother knows this Pokémon</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="welcome-tip">For more information on each pokemon, click on them to visit their serebii page. To see the full scale description of each category, hover over the ℹ icon.</p>
+      <button id="welcome-close">Let's go!</button>
+    </div>
+  </div>
 
   <script src="shared.js"></script>
   <script src="rate.js"></script>

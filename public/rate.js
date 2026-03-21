@@ -1,6 +1,8 @@
 const userId = getUserId();
 let allPokemon = [];
 let userRatings = {};
+let globalAverages = {};
+let wolfeRankings = [];
 let queue = [];
 let currentIndex = 0;
 
@@ -20,13 +22,17 @@ function preloadImages(startIndex, count = 5) {
 }
 
 async function init() {
-  const [pokemon, ratings] = await Promise.all([
+  const [pokemon, ratings, averages, wolfe] = await Promise.all([
     fetch('/data/pokemon.json').then(r => r.json()),
     fetch(`/api/ratings/${userId}`).then(r => r.json()),
+    fetch('/api/averages').then(r => r.json()),
+    fetch('/data/wolfe-rankings.json').then(r => r.json()),
   ]);
 
   allPokemon = pokemon;
   userRatings = ratings;
+  globalAverages = averages;
+  wolfeRankings = wolfe;
 
   queue = allPokemon.filter(p => !userRatings[p.id]);
   shuffleQueue();
@@ -34,6 +40,20 @@ async function init() {
 
   updateProgress();
   showCurrent();
+
+  // Show the header PDF button only when the user has some ratings but hasn't finished everything.
+  const ratedCount = Object.keys(userRatings).length;
+  if (ratedCount > 0 && ratedCount < allPokemon.length) {
+    document.getElementById('header-pdf-btn').classList.remove('hidden');
+  }
+
+  // Show the welcome modal whenever the user has no ratings yet.
+  if (Object.keys(userRatings).length === 0) {
+    document.getElementById('welcome-overlay').classList.remove('hidden');
+    document.getElementById('welcome-close').addEventListener('click', () => {
+      document.getElementById('welcome-overlay').classList.add('hidden');
+    });
+  }
 }
 
 function updateProgress() {
@@ -50,6 +70,7 @@ function showComplete() {
   document.getElementById('rate-next-btn').classList.add('hidden');
   document.getElementById('rate-complete').classList.remove('hidden');
   document.getElementById('rate-card').classList.add('complete');
+  document.getElementById('header-pdf-btn').classList.add('hidden');
 }
 
 function ratingSum(r) {
@@ -57,12 +78,27 @@ function ratingSum(r) {
 }
 
 function downloadPDF() {
+  const avgSum = avg => (avg.battleAbility ?? 0) + (avg.appeal ?? 0) + (avg.iconicness ?? 0);
+
+  // Pre-compute global total rank for every pokemon (unrated = last).
+  const globalRankById = {};
+  [...allPokemon]
+    .sort((a, b) => {
+      const aa = globalAverages[a.id], ab = globalAverages[b.id];
+      return (ab ? avgSum(ab) : -1) - (aa ? avgSum(aa) : -1);
+    })
+    .forEach((p, i) => { globalRankById[p.id] = i + 1; });
+
+  // Wolfe rank lookup by pokemon ID.
+  const wolfeRankById = Object.fromEntries(wolfeRankings.map(e => [e.id, e.rank]));
+
   const sorted = [...allPokemon]
     .filter(p => userRatings[p.id])
     .sort((a, b) => ratingSum(userRatings[b.id]) - ratingSum(userRatings[a.id]));
 
   const rows = sorted.map((p, i) => {
     const r = userRatings[p.id];
+    const avg = globalAverages[p.id];
     const dex = String(p.baseId ?? p.id).padStart(4, '0');
     return `<tr>
       <td>${i + 1}</td>
@@ -73,6 +109,9 @@ function downloadPDF() {
       <td>${r.appeal}</td>
       <td>${r.iconicness}</td>
       <td><strong>${ratingSum(r)}</strong></td>
+      <td>${avg ? avgSum(avg).toFixed(2) : '—'}</td>
+      <td>${globalRankById[p.id] ?? '—'}</td>
+      <td>${wolfeRankById[p.id] ?? '—'}</td>
     </tr>`;
   }).join('');
 
@@ -89,7 +128,7 @@ function downloadPDF() {
     th { background: #1e0900; color: #E8952A; text-align: left; padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
     td { padding: 5px 10px; border-bottom: 1px solid #ddd; }
     tr:nth-child(even) td { background: #f9f3eb; }
-    td:last-child { font-weight: 700; color: #c07030; }
+    .col-total { font-weight: 700; color: #c07030; }
   </style>
 </head>
 <body>
@@ -98,7 +137,8 @@ function downloadPDF() {
   <table>
     <thead><tr>
       <th>#</th><th>Dex</th><th>Name</th><th>Types</th>
-      <th>Battle Ability</th><th>Appeal</th><th>Iconicness</th><th>Total</th>
+      <th>Battle Ability</th><th>Appeal</th><th>Iconicness</th><th>My Total</th>
+      <th>Global Avg</th><th>Global Rank</th><th>Wolfe's Rank</th>
     </tr></thead>
     <tbody>${rows}</tbody>
   </table>
@@ -190,5 +230,6 @@ document.querySelectorAll('.rating-row input[type="range"]').forEach(input => {
 
 document.getElementById('rate-next-btn').addEventListener('click', saveAndNext);
 document.getElementById('download-pdf-btn').addEventListener('click', downloadPDF);
+document.getElementById('header-pdf-btn').addEventListener('click', downloadPDF);
 
 init();

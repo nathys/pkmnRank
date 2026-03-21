@@ -56,6 +56,7 @@ header h1 a {
   display: block;
 }
 
+
 #sidebar-toggle {
   background: none;
   border: none;
@@ -481,6 +482,96 @@ header h1 a {
 .type-Steel     { background: #b8b8d0; color: #111; }
 .type-Fairy     { background: #ee99ac; color: #111; }
 
+/* ── Welcome modal ───────────────────────────────────────────────────────────*/
+#welcome-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+#welcome-overlay.hidden {
+  display: none !important;
+}
+
+#welcome-modal {
+  background: #1e0900;
+  border: 2px solid #E8952A;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+#welcome-modal h2 {
+  font-size: 1.4rem;
+  color: #E8952A;
+  margin-bottom: 12px;
+}
+
+#welcome-modal > p {
+  font-size: 0.9rem;
+  color: #fdf0d8;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.welcome-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.welcome-category-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #F5D060;
+  margin-bottom: 4px;
+}
+
+/* Show low and high descriptors side by side */
+.welcome-category-range {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: #a07850;
+}
+
+.welcome-category-range span:last-child {
+  text-align: right;
+  color: #d4975c;
+}
+
+.welcome-tip {
+  font-size: 0.78rem;
+  color: #a07850;
+  margin-bottom: 24px;
+}
+
+#welcome-close {
+  width: 100%;
+  padding: 12px;
+  background: #E8952A;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#welcome-close:hover {
+  background: #c07030;
+}
+
 /* ── Rate page ───────────────────────────────────────────────────────────────*/
 #rate-card .rating-section {
   text-align: left;
@@ -559,6 +650,25 @@ header h1 a {
 
 #rate-next-btn:hover {
   background: #c07030;
+}
+
+#header-pdf-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px solid #E8952A;
+  color: #E8952A;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+#header-pdf-btn:hover {
+  background: #E8952A;
+  color: #1e0900;
 }
 
 #rate-complete {
