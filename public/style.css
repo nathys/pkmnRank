@@ -56,7 +56,6 @@ header h1 a {
   display: block;
 }
 
-
 #sidebar-toggle {
   background: none;
   border: none;
@@ -503,9 +502,27 @@ header h1 a {
   border-radius: 16px;
   padding: 32px;
   max-width: 480px;
-  width: 90%;
+  width: min(90%, calc(100vw - 32px));
   max-height: 90vh;
   overflow-y: auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 520px) {
+  #welcome-modal {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  /* Stack low/high descriptors vertically on narrow screens */
+  .welcome-category-range {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .welcome-category-range span:last-child {
+    text-align: left;
+  }
 }
 
 #welcome-modal h2 {
@@ -573,10 +590,6 @@ header h1 a {
 }
 
 /* ── Rate page ───────────────────────────────────────────────────────────────*/
-/* Relative positioning anchors the absolutely-placed floating PDF button */
-#rate-main {
-  position: relative;
-}
 #rate-card .rating-section {
   text-align: left;
   margin-top: 28px;
@@ -590,6 +603,14 @@ header h1 a {
   border-radius: 16px;
   padding: 89px 32px 36px;
   text-align: center;
+}
+
+@media (max-width: 520px) {
+  #rate-card {
+    margin: 16px;
+    padding: 72px 20px 28px;
+    border-radius: 12px;
+  }
 }
 
 #rate-card.complete {
@@ -688,13 +709,12 @@ header h1 a {
   color: #1e0900;
 }
 
-/* Floating PDF button — positioned top-right of main, outside the rate card */
+/* PDF button — secondary action below the Next button, full width */
 #header-pdf-btn {
-  position: absolute;
-  top: 32px;
-  right: 32px;
-  padding: 10px 16px;
-  background: #1e0900;
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  background: none;
   border: 1px solid #E8952A;
   color: #E8952A;
   border-radius: 8px;
@@ -702,7 +722,6 @@ header h1 a {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
-  white-space: nowrap;
 }
 
 #header-pdf-btn:hover {

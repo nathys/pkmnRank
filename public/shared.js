@@ -110,6 +110,25 @@ function typeBadgeHTML(type) {
   return `<span class="type-badge type-${type}">${type}</span>`;
 }
 
+// ── Rating helpers ────────────────────────────────────────────────────────────
+
+/** Returns the sum of all three rating fields for a rating object. */
+function ratingSum(r) {
+  return (r.battleAbility ?? 0) + (r.appeal ?? 0) + (r.iconicness ?? 0);
+}
+
+/**
+ * Returns the Serebii pokédex URL for a Pokémon.
+ * Forms resolve to their base Pokémon's page.
+ * @param {object} p - Pokémon entry.
+ * @param {object[]} allPokemon - Full Pokémon list (needed to resolve base forms).
+ */
+function serebiiUrl(p, allPokemon) {
+  const base = p.isForm ? allPokemon.find(b => b.id === p.baseId) : p;
+  const name = (base ? base.name : p.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
+  return `https://www.serebii.net/pokemon/${name}/`;
+}
+
 // ── Name helpers ──────────────────────────────────────────────────────────────
 function parseName(p, allPokemon) {
   if (!p.isForm) return { base: p.name, form: null };

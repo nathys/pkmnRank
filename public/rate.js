@@ -41,14 +41,11 @@ async function init() {
   updateProgress();
   showCurrent();
 
-  // Show the header PDF button only when the user has some ratings but hasn't finished everything.
   const ratedCount = Object.keys(userRatings).length;
   if (ratedCount > 0 && ratedCount < allPokemon.length) {
     document.getElementById('header-pdf-btn').classList.remove('hidden');
   }
-
-  // Show the welcome modal whenever the user has no ratings yet.
-  if (Object.keys(userRatings).length === 0) {
+  if (ratedCount === 0) {
     document.getElementById('welcome-overlay').classList.remove('hidden');
     document.getElementById('welcome-close').addEventListener('click', () => {
       document.getElementById('welcome-overlay').classList.add('hidden');
@@ -73,36 +70,29 @@ function showComplete() {
   document.getElementById('header-pdf-btn').classList.add('hidden');
 }
 
-function ratingSum(r) {
-  return (r.battleAbility ?? 0) + (r.appeal ?? 0) + (r.iconicness ?? 0);
-}
-
 function downloadPDF() {
-  const avgSum = avg => (avg.battleAbility ?? 0) + (avg.appeal ?? 0) + (avg.iconicness ?? 0);
-
-  // Pre-compute global total rank for every pokemon (unrated = last).
   const globalRankById = {};
   [...allPokemon]
     .sort((a, b) => {
       const aa = globalAverages[a.id], ab = globalAverages[b.id];
-      return (ab ? avgSum(ab) : -1) - (aa ? avgSum(aa) : -1);
+      return (ab ? ratingSum(ab) : -1) - (aa ? ratingSum(aa) : -1);
     })
     .forEach((p, i) => { globalRankById[p.id] = i + 1; });
 
-  // Wolfe rank lookup by pokemon ID.
   const wolfeRankById = Object.fromEntries(wolfeRankings.map(e => [e.id, e.rank]));
 
-  // Rated Pokémon sorted by total descending; unrated appended in dex order.
-  const rated   = [...allPokemon].filter(p =>  userRatings[p.id]).sort((a, b) => ratingSum(userRatings[b.id]) - ratingSum(userRatings[a.id]));
-  const unrated = [...allPokemon].filter(p => !userRatings[p.id]).sort((a, b) => a.id - b.id);
-  const sorted  = [...rated, ...unrated];
+  // Single pass: partition into rated (sorted by total desc) and unrated (sorted by dex).
+  const rated = [], unrated = [];
+  for (const p of allPokemon) (userRatings[p.id] ? rated : unrated).push(p);
+  rated.sort((a, b) => ratingSum(userRatings[b.id]) - ratingSum(userRatings[a.id]));
+  unrated.sort((a, b) => a.id - b.id);
+  const sorted = [...rated, ...unrated];
 
   const rows = sorted.map((p, i) => {
     const r   = userRatings[p.id];
     const avg = globalAverages[p.id];
     const dex = String(p.baseId ?? p.id).padStart(4, '0');
-    // Unrated rows show dashes for all score columns
-    return `<tr class="${r ? '' : 'unrated'}">
+    return `<tr${r ? '' : ' class="unrated"'}>
       <td>${i + 1}</td>
       <td>#${dex}</td>
       <td>${p.name}</td>
@@ -111,13 +101,13 @@ function downloadPDF() {
       <td>${r ? r.appeal       : '—'}</td>
       <td>${r ? r.iconicness   : '—'}</td>
       <td><strong>${r ? ratingSum(r) : '—'}</strong></td>
-      <td>${avg ? avgSum(avg).toFixed(2) : '—'}</td>
+      <td>${avg ? ratingSum(avg).toFixed(2) : '—'}</td>
       <td>${globalRankById[p.id] ?? '—'}</td>
       <td>${wolfeRankById[p.id] ?? '—'}</td>
     </tr>`;
   }).join('');
 
-  const ratedCount = Object.keys(userRatings).length;
+  const ratedCount = rated.length;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -133,7 +123,7 @@ function downloadPDF() {
     td { padding: 5px 10px; border-bottom: 1px solid #ddd; }
     tr:nth-child(even) td { background: #f9f3eb; }
     tr.unrated td { color: #aaa; }
-    .col-total { font-weight: 700; color: #c07030; }
+    td strong { font-weight: 700; color: #c07030; }
   </style>
 </head>
 <body>
@@ -156,18 +146,6 @@ function downloadPDF() {
   w.print();
 }
 
-/**
- * Returns the Serebii pokédex URL for a given Pokémon.
- * Forms resolve to their base Pokémon's page.
- * @param {object} p - Pokémon entry from allPokemon.
- * @returns {string} Serebii URL.
- */
-function serebiiUrl(p) {
-  const base = p.isForm ? allPokemon.find(b => b.id === p.baseId) : p;
-  const name = (base ? base.name : p.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
-  return `https://www.serebii.net/pokemon/${name}/`;
-}
-
 function showCurrent() {
   if (currentIndex >= queue.length) {
     showComplete();
@@ -179,24 +157,20 @@ function showCurrent() {
   document.getElementById('rate-next-btn').classList.remove('hidden');
 
   const p = queue[currentIndex];
-  const url = serebiiUrl(p);
+  const url = serebiiUrl(p, allPokemon);
 
-  // Sprite — clicking opens the Serebii page in a new tab
   const sprite = document.getElementById('rate-sprite');
   sprite.src = p.sprite || '';
   sprite.alt = p.name;
   sprite.onclick = () => window.open(url, '_blank', 'noopener');
 
   document.getElementById('rate-dex').textContent = '#' + String(p.baseId ?? p.id).padStart(4, '0');
-
-  // Name — rendered as a link to the Serebii page
   document.getElementById('rate-name').innerHTML =
     `<a href="${url}" target="_blank" rel="noopener" class="serebii-link">${nameHTML(p, allPokemon)}</a>`;
 
   const typesEl = document.getElementById('rate-types');
   typesEl.innerHTML = p.types.map(typeBadgeHTML).join('');
 
-  // Reset sliders to 5
   document.querySelectorAll('.rating-row input[type="range"]').forEach(input => {
     input.value = 5;
     input.closest('.rating-row').querySelector('.score-display').textContent = '5';
@@ -230,7 +204,6 @@ async function saveAndNext() {
   }
 }
 
-// Stat triangle
 const triCanvas = document.getElementById('stat-triangle');
 
 function getSliderVals() {
@@ -239,12 +212,10 @@ function getSliderVals() {
   );
 }
 
-// Build tooltip text for info icons
 document.querySelectorAll('.info-icon').forEach(el => {
   el.dataset.tip = `0: ${el.dataset.tipLow}\n10: ${el.dataset.tipHigh}`;
 });
 
-// Live slider display
 document.querySelectorAll('.rating-row input[type="range"]').forEach(input => {
   input.addEventListener('input', () => {
     const v = parseFloat(input.value);

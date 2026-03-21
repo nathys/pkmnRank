@@ -12,7 +12,6 @@ async function init() {
   allPokemon = pokemon;
   userRatings = ratings;
 
-  // Show the CTA button when the user hasn't finished rating all Pokémon.
   const ratedCount = Object.keys(userRatings).length;
   if (ratedCount < allPokemon.length) {
     const btn = document.getElementById('start-rating-btn');
@@ -25,10 +24,6 @@ async function init() {
   renderList();
 }
 
-
-function ratingSum(r) {
-  return (r.battleAbility ?? 0) + (r.appeal ?? 0) + (r.iconicness ?? 0);
-}
 
 function getFilters() {
   return {
@@ -140,7 +135,6 @@ function updateFilterXButtons() {
   document.getElementById('clear-rated').classList.toggle('hidden', !rated);
 }
 
-// Pool for gen dropdown: all pokemon matching current search + type filters.
 function getPool() {
   const { search, gen } = getFilters();
   return allPokemon.filter(p => {
@@ -150,7 +144,6 @@ function getPool() {
   });
 }
 
-// Pool for type dropdown: all pokemon matching current search + gen filters.
 function getGenPool() {
   const { search, type, type2 } = getFilters();
   return allPokemon.filter(p => {
