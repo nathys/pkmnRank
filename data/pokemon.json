@@ -4599,18 +4599,6 @@
     "moves": []
   },
   {
-    "id": 10077,
-    "name": "Kyogre-Primal",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10077.png",
-    "types": [
-      "Water"
-    ],
-    "generation": "generation-iii",
-    "baseId": 382,
-    "isForm": true,
-    "moves": []
-  },
-  {
     "id": 383,
     "name": "Groudon",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/383.png",
@@ -4618,19 +4606,6 @@
       "Ground"
     ],
     "generation": "generation-iii",
-    "moves": []
-  },
-  {
-    "id": 10078,
-    "name": "Groudon-Primal",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10078.png",
-    "types": [
-      "Ground",
-      "Fire"
-    ],
-    "generation": "generation-iii",
-    "baseId": 383,
-    "isForm": true,
     "moves": []
   },
   {
@@ -4974,6 +4949,30 @@
     "moves": []
   },
   {
+    "id": 10035,
+    "name": "Burmy-Trash",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10035.png",
+    "types": [
+      "Bug"
+    ],
+    "generation": "generation-iv",
+    "moves": [],
+    "isForm": true,
+    "baseId": 412
+  },
+  {
+    "id": 10034,
+    "name": "Burmy-Sandy",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10034.png",
+    "types": [
+      "Bug"
+    ],
+    "generation": "generation-iv",
+    "moves": [],
+    "isForm": true,
+    "baseId": 412
+  },
+  {
     "id": 413,
     "name": "Wormadam",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/413.png",
@@ -5104,6 +5103,18 @@
     "moves": []
   },
   {
+    "id": 10039,
+    "name": "Shellos-East",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10039.png",
+    "types": [
+      "Water"
+    ],
+    "generation": "generation-iv",
+    "moves": [],
+    "isForm": true,
+    "baseId": 422
+  },
+  {
     "id": 423,
     "name": "Gastrodon",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/423.png",
@@ -5113,6 +5124,19 @@
     ],
     "generation": "generation-iv",
     "moves": []
+  },
+  {
+    "id": 10040,
+    "name": "Gastrodon-East",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10040.png",
+    "types": [
+      "Water",
+      "Ground"
+    ],
+    "generation": "generation-iv",
+    "moves": [],
+    "isForm": true,
+    "baseId": 423
   },
   {
     "id": 424,
@@ -5932,6 +5956,19 @@
     "moves": []
   },
   {
+    "id": 10006,
+    "name": "Shaymin-Sky",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10006.png",
+    "types": [
+      "Grass",
+      "Flying"
+    ],
+    "generation": "generation-iv",
+    "moves": [],
+    "isForm": true,
+    "baseId": 492
+  },
+  {
     "id": 493,
     "name": "Arceus",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/493.png",
@@ -6555,6 +6592,18 @@
     ],
     "generation": "generation-v",
     "moves": []
+  },
+  {
+    "id": 10247,
+    "name": "Basculin-White-Striped",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10247.png",
+    "types": [
+      "Water"
+    ],
+    "generation": "generation-v",
+    "moves": [],
+    "isForm": true,
+    "baseId": 550
   },
   {
     "id": 551,
@@ -7733,6 +7782,19 @@
     "moves": []
   },
   {
+    "id": 10024,
+    "name": "Keldeo-Resolute",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10024.png",
+    "types": [
+      "Water",
+      "Fighting"
+    ],
+    "generation": "generation-v",
+    "moves": [],
+    "isForm": true,
+    "baseId": 647
+  },
+  {
     "id": 648,
     "name": "Meloetta",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/648.png",
@@ -7982,9 +8044,9 @@
       "Fairy"
     ],
     "generation": "generation-vi",
-    "baseId": 670,
+    "moves": [],
     "isForm": true,
-    "moves": []
+    "baseId": 670
   },
   {
     "id": 671,
@@ -9548,7 +9610,7 @@
   },
   {
     "id": 10155,
-    "name": "Necrozma-Dusk",
+    "name": "Necrozma-Dusk Mane",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10155.png",
     "types": [
       "Psychic",
@@ -9561,24 +9623,11 @@
   },
   {
     "id": 10156,
-    "name": "Necrozma-Dawn",
+    "name": "Necrozma-Dawn Wings",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10156.png",
     "types": [
       "Psychic",
       "Ghost"
-    ],
-    "generation": "generation-vii",
-    "baseId": 800,
-    "isForm": true,
-    "moves": []
-  },
-  {
-    "id": 10157,
-    "name": "Necrozma-Ultra",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10157.png",
-    "types": [
-      "Psychic",
-      "Dragon"
     ],
     "generation": "generation-vii",
     "baseId": 800,
@@ -9594,19 +9643,6 @@
       "Fairy"
     ],
     "generation": "generation-vii",
-    "moves": []
-  },
-  {
-    "id": 10147,
-    "name": "Magearna-Original",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10147.png",
-    "types": [
-      "Steel",
-      "Fairy"
-    ],
-    "generation": "generation-vii",
-    "baseId": 801,
-    "isForm": true,
     "moves": []
   },
   {
@@ -10104,6 +10140,19 @@
     ],
     "generation": "generation-viii",
     "moves": []
+  },
+  {
+    "id": 10184,
+    "name": "Toxtricity-Low-Key",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10184.png",
+    "types": [
+      "Electric",
+      "Poison"
+    ],
+    "generation": "generation-viii",
+    "moves": [],
+    "isForm": true,
+    "baseId": 849
   },
   {
     "id": 850,
@@ -10661,7 +10710,7 @@
   },
   {
     "id": 10193,
-    "name": "Calyrex-Ice",
+    "name": "Calyrex-Ice Rider",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10193.png",
     "types": [
       "Psychic",
@@ -10674,7 +10723,7 @@
   },
   {
     "id": 10194,
-    "name": "Calyrex-Shadow",
+    "name": "Calyrex-Shadow Rider",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10194.png",
     "types": [
       "Psychic",
@@ -11633,7 +11682,7 @@
   },
   {
     "id": 984,
-    "name": "Great-tusk",
+    "name": "Great Tusk",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/984.png",
     "types": [
       "Ground",
@@ -11644,7 +11693,7 @@
   },
   {
     "id": 985,
-    "name": "Scream-tail",
+    "name": "Scream Tail",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/985.png",
     "types": [
       "Fairy",
@@ -11655,7 +11704,7 @@
   },
   {
     "id": 986,
-    "name": "Brute-bonnet",
+    "name": "Brute Bonnet",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/986.png",
     "types": [
       "Grass",
@@ -11666,7 +11715,7 @@
   },
   {
     "id": 987,
-    "name": "Flutter-mane",
+    "name": "Flutter Mane",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/987.png",
     "types": [
       "Ghost",
@@ -11677,7 +11726,7 @@
   },
   {
     "id": 988,
-    "name": "Slither-wing",
+    "name": "Slither Wing",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/988.png",
     "types": [
       "Bug",
@@ -11688,7 +11737,7 @@
   },
   {
     "id": 989,
-    "name": "Sandy-shocks",
+    "name": "Sandy Shocks",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/989.png",
     "types": [
       "Electric",
@@ -11699,7 +11748,7 @@
   },
   {
     "id": 990,
-    "name": "Iron-treads",
+    "name": "Iron Treads",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/990.png",
     "types": [
       "Ground",
@@ -11710,7 +11759,7 @@
   },
   {
     "id": 991,
-    "name": "Iron-bundle",
+    "name": "Iron Bundle",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/991.png",
     "types": [
       "Ice",
@@ -11721,7 +11770,7 @@
   },
   {
     "id": 992,
-    "name": "Iron-hands",
+    "name": "Iron Hands",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/992.png",
     "types": [
       "Fighting",
@@ -11732,7 +11781,7 @@
   },
   {
     "id": 993,
-    "name": "Iron-jugulis",
+    "name": "Iron Jugulis",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/993.png",
     "types": [
       "Dark",
@@ -11743,7 +11792,7 @@
   },
   {
     "id": 994,
-    "name": "Iron-moth",
+    "name": "Iron Moth",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/994.png",
     "types": [
       "Fire",
@@ -11754,7 +11803,7 @@
   },
   {
     "id": 995,
-    "name": "Iron-thorns",
+    "name": "Iron Thorns",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/995.png",
     "types": [
       "Rock",
@@ -11863,7 +11912,7 @@
   },
   {
     "id": 1005,
-    "name": "Roaring-moon",
+    "name": "Roaring Moon",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1005.png",
     "types": [
       "Dragon",
@@ -11874,7 +11923,7 @@
   },
   {
     "id": 1006,
-    "name": "Iron-valiant",
+    "name": "Iron Valiant",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1006.png",
     "types": [
       "Fairy",
@@ -11907,7 +11956,7 @@
   },
   {
     "id": 1009,
-    "name": "Walking-wake",
+    "name": "Walking Wake",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1009.png",
     "types": [
       "Water",
@@ -11918,7 +11967,7 @@
   },
   {
     "id": 1010,
-    "name": "Iron-leaves",
+    "name": "Iron Leaves",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1010.png",
     "types": [
       "Grass",
@@ -12066,7 +12115,7 @@
   },
   {
     "id": 1020,
-    "name": "Gouging-fire",
+    "name": "Gouging Fire",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1020.png",
     "types": [
       "Fire",
@@ -12077,7 +12126,7 @@
   },
   {
     "id": 1021,
-    "name": "Raging-bolt",
+    "name": "Raging Bolt",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1021.png",
     "types": [
       "Electric",
@@ -12088,7 +12137,7 @@
   },
   {
     "id": 1022,
-    "name": "Iron-boulder",
+    "name": "Iron Boulder",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1022.png",
     "types": [
       "Rock",
@@ -12099,7 +12148,7 @@
   },
   {
     "id": 1023,
-    "name": "Iron-crown",
+    "name": "Iron Crown",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1023.png",
     "types": [
       "Steel",
