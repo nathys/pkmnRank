@@ -669,6 +669,25 @@ header h1 a {
   background: #c07030;
 }
 
+/* 'Start Rating' CTA — centre item of the header-top flex row */
+#start-rating-btn {
+  padding: 8px 16px;
+  background: #1e0900;
+  border: 1px solid #E8952A;
+  color: #E8952A;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+#start-rating-btn:hover {
+  background: #E8952A;
+  color: #1e0900;
+}
+
 /* Floating PDF button — positioned top-right of main, outside the rate card */
 #header-pdf-btn {
   position: absolute;

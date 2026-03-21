@@ -12,6 +12,14 @@ async function init() {
   allPokemon = pokemon;
   userRatings = ratings;
 
+  // Show the CTA button when the user hasn't finished rating all Pokémon.
+  const ratedCount = Object.keys(userRatings).length;
+  if (ratedCount < allPokemon.length) {
+    const btn = document.getElementById('start-rating-btn');
+    btn.textContent = ratedCount > 0 ? 'Continue Rating' : 'Start Rating';
+    btn.classList.remove('hidden');
+  }
+
   refreshGenFilter(getGenPool());
   refreshTypeFilters(getPool());
   renderList();
