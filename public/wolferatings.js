@@ -88,30 +88,35 @@ function renderList() {
 
   list.sort((a, b) => a.rank - b.rank);
 
+  // When pyramid is visible it already shows ranks 1–10, so start the # counter at 11.
+  const rankOffset = filtered ? 0 : 10;
+
   const container = document.getElementById('wolfe-list');
   container.innerHTML = `
     <table class="ratings-table">
       <thead>
         <tr>
-          <th>Rank</th>
+          <th>#</th>
           <th></th>
           <th>Name</th>
+          <th>Total Rank</th>
           <th class="col-detail">Dex #</th>
         </tr>
       </thead>
       <tbody>
-        ${list.map(entry => {
+        ${list.map((entry, i) => {
           const p = pokemonById[entry.id];
           if (!p) return '';
           const dex = String(p.baseId ?? p.id).padStart(4, '0');
           return `
             <tr class="main-row row-rated">
-              <td class="rank-num wolfe-rank">#${entry.rank}</td>
+              <td class="rank-num">${i + 1 + rankOffset}</td>
               <td><div class="list-sprite-wrapper"><canvas class="list-sprite-canvas" data-id="${p.id}" width="86" height="86"></canvas><img class="list-sprite" src="${p.sprite || ''}" alt="${p.name}" loading="lazy" /></div></td>
               <td>
                 <div class="list-dex">#${dex}</div>
                 ${nameHTML(p, allPokemon)}
               </td>
+              <td class="rank-num wolfe-rank">#${entry.rank}</td>
               <td class="col-detail list-dex">#${dex}</td>
             </tr>
           `;

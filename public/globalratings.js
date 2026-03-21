@@ -89,6 +89,16 @@ function renderList() {
   const { search, gen, type, type2, sortBy } = getFilters();
   const filtered = search || gen || type || type2 || sortBy !== 'total';
 
+  // Rank every pokemon globally by total score, regardless of current filters.
+  // Unrated pokemon share the last rank.
+  const totalRankById = {};
+  allPokemon.slice()
+    .sort((a, b) => {
+      const aa = globalAverages[a.id], ab = globalAverages[b.id];
+      return (ab ? avgSum(ab) : -1) - (aa ? avgSum(aa) : -1);
+    })
+    .forEach((p, i) => { totalRankById[p.id] = i + 1; });
+
   document.getElementById('global-pyramid').style.display = filtered ? 'none' : '';
 
   let list = allPokemon.filter(p => {
@@ -118,6 +128,9 @@ function renderList() {
     return (ab ? ab[sortBy] ?? -1 : -1) - (aa ? aa[sortBy] ?? -1 : -1);
   });
 
+  // When the pyramid is visible it already shows ranks 1–10, so start the table at 11.
+  const rankOffset = filtered ? 0 : 10;
+
   const container = document.getElementById('global-list');
   container.innerHTML = `
     <table class="ratings-table">
@@ -130,6 +143,7 @@ function renderList() {
           <th class="col-detail">Appeal</th>
           <th class="col-detail">Iconicness</th>
           <th>Total</th>
+          <th>Total Rank</th>
           <th class="col-detail">Ratings</th>
         </tr>
       </thead>
@@ -139,7 +153,7 @@ function renderList() {
           const dex = String(p.baseId ?? p.id).padStart(4, '0');
           return `
             <tr class="main-row ${avg ? 'row-rated' : 'row-unrated'}">
-              <td class="rank-num">${i + 1}</td>
+              <td class="rank-num">${i + 1 + rankOffset}</td>
               <td><div class="list-sprite-wrapper"><canvas class="list-sprite-canvas" data-id="${p.id}" width="86" height="86"></canvas><img class="list-sprite" src="${p.sprite || ''}" alt="${p.name}" loading="lazy" /></div></td>
               <td>
                 <div class="list-dex">#${dex}</div>
@@ -149,6 +163,7 @@ function renderList() {
               <td class="col-detail">${avg ? avg.appeal : '—'}</td>
               <td class="col-detail">${avg ? avg.iconicness : '—'}</td>
               <td class="total-score">${avg ? avgSum(avg).toFixed(2) : '—'}</td>
+              <td class="rank-num">#${totalRankById[p.id]}</td>
               <td class="col-detail rating-count">${avg ? avg.count : '—'}</td>
             </tr>
             <tr class="row-expand hidden">
