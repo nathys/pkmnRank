@@ -928,11 +928,17 @@ header h1 a {
   background: none;
 }
 
+/* Cap the name column on the wolfe table so Total Rank and Dex # sit closer to it. */
+#wolfe-list .ratings-table td:nth-child(3),
+#wolfe-list .ratings-table th:nth-child(3) {
+  width: 40%;
+}
+
 .wolfe-rank {
   font-weight: 700;
   color: #F5D060;
   font-size: 0.95rem;
-  width: 56px;
+  width: 90px;
 }
 
 .category-cell {
