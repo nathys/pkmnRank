@@ -187,14 +187,17 @@ function renderList() {
     drawStatTriangle(canvas, avg ? [avg.battleAbility, avg.appeal, avg.iconicness] : null);
   });
 
-  container.querySelectorAll('.main-row').forEach(row => {
-    row.addEventListener('click', () => {
-      const detail = row.nextElementSibling;
-      const isOpen = !detail.classList.contains('hidden');
-      container.querySelectorAll('.row-expand').forEach(r => r.classList.add('hidden'));
-      if (!isOpen) detail.classList.remove('hidden');
+  // Row expand is mobile-only on the global page — desktop shows all stats inline
+  if (window.innerWidth <= 600) {
+    container.querySelectorAll('.main-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const detail = row.nextElementSibling;
+        const isOpen = !detail.classList.contains('hidden');
+        container.querySelectorAll('.row-expand').forEach(r => r.classList.add('hidden'));
+        if (!isOpen) detail.classList.remove('hidden');
+      });
     });
-  });
+  }
 }
 
 function updateClearButton() {

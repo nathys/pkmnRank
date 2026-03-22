@@ -1009,6 +1009,17 @@ header h1 a {
   background: #2a1000;
 }
 
+/* Suppress row hover highlight on the global table (not interactive on desktop) */
+#global-list .ratings-table tr:hover td {
+  background: none;
+}
+
+@media (max-width: 600px) {
+  #global-list .ratings-table tr:hover td {
+    background: #2a1000;
+  }
+}
+
 .row-unrated td {
   color: #a07850;
 }
@@ -1187,6 +1198,17 @@ header h1 a {
 
 .main-row {
   cursor: pointer;
+}
+
+/* Global ratings table: rows are not interactive on desktop */
+#global-list .main-row {
+  cursor: default;
+}
+
+@media (max-width: 600px) {
+  #global-list .main-row {
+    cursor: pointer;
+  }
 }
 
 .category-row td {
