@@ -90,6 +90,41 @@
     <div id="ratings-list"></div>
   </main>
 
+  <!-- Welcome modal — shown on first row expand when user has no ratings -->
+  <div id="welcome-overlay" class="hidden">
+    <div id="welcome-modal">
+      <h2>Welcome to pkmnRank</h2>
+      <p>Rate every Pokémon and see how your rankings stack up. You can also download your rankings for your own record.</p>
+
+      <div class="welcome-categories">
+        <div class="welcome-category">
+          <div class="welcome-category-name">Battle Ability</div>
+          <div class="welcome-category-range">
+            <span>0: Weakest of the weak. Couldn't win a battle with the world champ difference</span>
+            <span>10: The best of the best. VGC legends &amp; Smogon staples</span>
+          </div>
+        </div>
+        <div class="welcome-category">
+          <div class="welcome-category-name">Appeal</div>
+          <div class="welcome-category-range">
+            <span>0: Not a Pokémon, but an abomination</span>
+            <span>10: Peak Pokémon design</span>
+          </div>
+        </div>
+        <div class="welcome-category">
+          <div class="welcome-category-name">Iconicness</div>
+          <div class="welcome-category-range">
+            <span>0: So forgettable, you forgot it existed</span>
+            <span>10: Everyone and your mother knows this Pokémon</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="welcome-tip">Use the sliders in each row to rate a Pokémon, then click Save. To see the full scale description of each category, visit the Rate page and hover over the ℹ icon.</p>
+      <button id="welcome-close">Let's go!</button>
+    </div>
+  </div>
+
   <script src="shared.js"></script>
   <script src="myratings.js"></script>
 </body>

@@ -1,6 +1,8 @@
 const userId = getUserId();
 let allPokemon = [];
 let userRatings = {};
+// Tracks whether the welcome modal has been shown this session
+let welcomeShown = false;
 
 
 async function init() {
@@ -18,6 +20,11 @@ async function init() {
     btn.textContent = ratedCount > 0 ? 'Continue Rating' : 'Start Rating';
     btn.classList.remove('hidden');
   }
+
+  // Wire welcome modal close button (modal is triggered on first row expand when unrated)
+  document.getElementById('welcome-close').addEventListener('click', () => {
+    document.getElementById('welcome-overlay').classList.add('hidden');
+  });
 
   refreshGenFilter(getGenPool());
   refreshTypeFilters(getPool());
@@ -90,12 +97,39 @@ function renderList() {
               <td class="col-detail">${r ? r.iconicness : '—'}</td>
               <td class="total-score">${r ? ratingSum(r) : '—'}</td>
             </tr>
-            <tr class="row-expand hidden">
-              <td colspan="4">
-                <div class="expand-grid">
-                  <span>Battle Ability</span><span>${r ? r.battleAbility : '—'}</span>
-                  <span>Appeal</span><span>${r ? r.appeal : '—'}</span>
-                  <span>Iconicness</span><span>${r ? r.iconicness : '—'}</span>
+            <tr class="row-expand hidden" data-pokemon-id="${p.id}">
+              <td colspan="7">
+                <!-- Mobile default: stats summary + Edit button -->
+                <div class="expand-stats-view">
+                  <div class="expand-grid">
+                    <span>Battle Ability</span><span>${r ? r.battleAbility : '—'}</span>
+                    <span>Appeal</span><span>${r ? r.appeal : '—'}</span>
+                    <span>Iconicness</span><span>${r ? r.iconicness : '—'}</span>
+                  </div>
+                  <button class="expand-edit-btn">Edit</button>
+                </div>
+                <!-- Desktop default / mobile edit mode: rating sliders -->
+                <div class="expand-sliders-view">
+                  <div class="expand-panel">
+                    <div class="expand-sliders">
+                      <div class="expand-rating-row">
+                        <label><span>Battle Ability</span><span class="expand-score" data-field="battleAbility">${r ? r.battleAbility : 5}</span></label>
+                        <input type="range" min="0" max="10" step="0.5" value="${r ? r.battleAbility : 5}" data-field="battleAbility" />
+                      </div>
+                      <div class="expand-rating-row">
+                        <label><span>Appeal</span><span class="expand-score" data-field="appeal">${r ? r.appeal : 5}</span></label>
+                        <input type="range" min="0" max="10" step="0.5" value="${r ? r.appeal : 5}" data-field="appeal" />
+                      </div>
+                      <div class="expand-rating-row">
+                        <label><span>Iconicness</span><span class="expand-score" data-field="iconicness">${r ? r.iconicness : 5}</span></label>
+                        <input type="range" min="0" max="10" step="0.5" value="${r ? r.iconicness : 5}" data-field="iconicness" />
+                      </div>
+                    </div>
+                    <div class="expand-actions">
+                      <button class="expand-close-btn">Close</button>
+                      <button class="expand-save-btn">Save</button>
+                    </div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -115,9 +149,113 @@ function renderList() {
       const detail = row.nextElementSibling;
       const isOpen = !detail.classList.contains('hidden');
       container.querySelectorAll('.row-expand').forEach(r => r.classList.add('hidden'));
-      if (!isOpen) detail.classList.remove('hidden');
+      if (!isOpen) {
+        detail.classList.remove('hidden');
+        // On desktop the sliders are immediately visible — show welcome modal here.
+        // On mobile the modal is deferred to the Edit button click (sliders aren't shown yet).
+        const isMobile = window.innerWidth <= 600;
+        if (!isMobile && Object.keys(userRatings).length === 0 && !welcomeShown) {
+          welcomeShown = true;
+          document.getElementById('welcome-overlay').classList.remove('hidden');
+        }
+      }
     });
   });
+
+  // Wire slider live-display, edit, close, and save for each expand row
+  container.querySelectorAll('.row-expand').forEach(expandRow => {
+    // Mobile: Edit button switches from stats view to sliders view
+    expandRow.querySelector('.expand-edit-btn').addEventListener('click', () => {
+      expandRow.classList.add('edit-mode');
+      // Show welcome modal when an unrated user first reaches the sliders on mobile
+      if (Object.keys(userRatings).length === 0 && !welcomeShown) {
+        welcomeShown = true;
+        document.getElementById('welcome-overlay').classList.remove('hidden');
+      }
+    });
+
+    // Update score display as slider moves
+    expandRow.querySelectorAll('input[type="range"]').forEach(input => {
+      input.addEventListener('input', () => {
+        const v = parseFloat(input.value);
+        expandRow.querySelector(`.expand-score[data-field="${input.dataset.field}"]`).textContent =
+          Number.isInteger(v) ? v : v.toFixed(1);
+      });
+    });
+
+    // Close: collapse the row and reset edit-mode (for mobile re-open)
+    expandRow.querySelector('.expand-close-btn').addEventListener('click', () => {
+      expandRow.classList.remove('edit-mode');
+      expandRow.classList.add('hidden');
+    });
+
+    // Save and collapse
+    expandRow.querySelector('.expand-save-btn').addEventListener('click', async () => {
+      const pokemonId = parseInt(expandRow.dataset.pokemonId, 10);
+      await saveRating(pokemonId, expandRow, expandRow.previousElementSibling);
+    });
+  });
+}
+
+
+/**
+ * POSTs a rating to the server, then updates the row display in-place.
+ * @param {number} pokemonId
+ * @param {HTMLElement} expandRow - The .row-expand <tr>
+ * @param {HTMLElement} mainRow   - The preceding .main-row <tr>
+ */
+async function saveRating(pokemonId, expandRow, mainRow) {
+  const getVal = field => Number(expandRow.querySelector(`input[data-field="${field}"]`).value);
+
+  const res = await fetch(`/api/ratings/${userId}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      pokemonId,
+      battleAbility: getVal('battleAbility'),
+      appeal: getVal('appeal'),
+      iconicness: getVal('iconicness'),
+    }),
+  });
+
+  if (!res.ok) return;
+
+  const { rating } = await res.json();
+  userRatings[pokemonId] = rating;
+
+  // Update row class and stat cells without a full re-render
+  mainRow.classList.remove('row-unrated');
+  mainRow.classList.add('row-rated');
+  const cells = mainRow.querySelectorAll('td');
+  cells[3].textContent = rating.battleAbility; // Battle Ability (col-detail)
+  cells[4].textContent = rating.appeal;         // Appeal (col-detail)
+  cells[5].textContent = rating.iconicness;     // Iconicness (col-detail)
+  cells[6].textContent = ratingSum(rating);     // Total
+
+  // Redraw the stat triangle canvas
+  const canvas = mainRow.querySelector('.list-sprite-canvas');
+  drawStatTriangle(canvas, [rating.battleAbility, rating.appeal, rating.iconicness]);
+
+  // Refresh the mobile stats view so re-opening the row shows the new values
+  const gridSpans = expandRow.querySelectorAll('.expand-grid span:nth-child(even)');
+  if (gridSpans.length === 3) {
+    gridSpans[0].textContent = rating.battleAbility;
+    gridSpans[1].textContent = rating.appeal;
+    gridSpans[2].textContent = rating.iconicness;
+  }
+
+  // Update the start-rating button text
+  const ratedCount = Object.keys(userRatings).length;
+  const startBtn = document.getElementById('start-rating-btn');
+  if (ratedCount >= allPokemon.length) {
+    startBtn.classList.add('hidden');
+  } else {
+    startBtn.textContent = 'Continue Rating';
+    startBtn.classList.remove('hidden');
+  }
+
+  expandRow.classList.remove('edit-mode');
+  expandRow.classList.add('hidden');
 }
 
 function updateClearButton() {

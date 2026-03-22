@@ -1060,24 +1060,128 @@ header h1 a {
   font-size: 0.8rem;
 }
 
-.row-expand {
-  display: none;
+/* .hidden handles display:none; this ensures a non-hidden row-expand is visible on all screen sizes */
+.row-expand:not(.hidden) {
+  display: table-row;
 }
 
+/* Expand row td: let content dictate height, no extra padding (expand-panel handles its own) */
+.row-expand td {
+  height: auto;
+  padding: 0;
+}
+
+/* Desktop default: show sliders directly, hide mobile stats view */
+.expand-stats-view { display: none; }
+.expand-sliders-view { display: block; }
+
+/* Stats summary shown on mobile by default */
 .expand-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px 16px;
-  padding: 10px 12px;
   font-size: 0.85rem;
 }
 
-.expand-grid span:nth-child(odd) {
-  color: #a07850;
+.expand-grid span:nth-child(odd) { color: #a07850; }
+.expand-grid span:nth-child(even) { font-weight: 600; color: #fdf0d8; }
+
+/* Edit button — secondary action to reach sliders on mobile */
+.expand-edit-btn {
+  background: none;
+  border: 1px solid #E8952A;
+  color: #E8952A;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
 }
 
-.expand-grid span:nth-child(even) {
+.expand-edit-btn:hover {
+  background: #E8952A;
+  color: #1e0900;
+}
+
+/* Expand panel: sliders on the left, action buttons on the right */
+.expand-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 14px 12px;
+}
+
+.expand-sliders {
+  flex: 1;
+  min-width: 0;
+}
+
+.expand-rating-row {
+  margin-bottom: 12px;
+}
+
+.expand-rating-row:last-child {
+  margin-bottom: 0;
+}
+
+.expand-rating-row label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  color: #f5d880;
+}
+
+.expand-rating-row label .expand-score {
+  color: #E8952A;
+  font-weight: 700;
+}
+
+.expand-rating-row input[type="range"] {
+  width: 100%;
+  accent-color: #E8952A;
+}
+
+.expand-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.expand-save-btn,
+.expand-close-btn {
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.expand-save-btn {
+  background: #E8952A;
+  color: white;
+  border: none;
+  transition: background 0.15s;
+}
+
+.expand-save-btn:hover {
+  background: #c07030;
+}
+
+.expand-close-btn {
+  background: none;
+  border: 1px solid #a07850;
+  color: #a07850;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.expand-close-btn:hover {
+  border-color: #fdf0d8;
   color: #fdf0d8;
 }
 
@@ -1115,8 +1219,31 @@ header h1 a {
 }
 
 @media (max-width: 600px) {
-  .row-expand:not(.hidden) {
-    display: table-row;
+  /* Mobile: show stats view by default, sliders view only in edit mode */
+  .expand-stats-view {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+  }
+
+  .expand-sliders-view { display: none; }
+
+  /* edit-mode: hide stats, reveal sliders */
+  .row-expand.edit-mode .expand-stats-view { display: none; }
+  .row-expand.edit-mode .expand-sliders-view { display: block; }
+
+  /* Stack sliders above buttons on narrow screens */
+  .expand-panel {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .expand-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
   }
 
   .col-detail {
