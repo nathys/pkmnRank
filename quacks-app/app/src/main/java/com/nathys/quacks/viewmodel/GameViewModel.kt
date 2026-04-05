@@ -34,12 +34,21 @@ class GameViewModel : ViewModel() {
 
     // ─── Setup phase ─────────────────────────────────────────────────────────
 
-    /** Initialise a fresh game with the given player names and standard starting bags. */
-    fun startGame(playerNames: List<String>) {
+    /**
+     * Initialise a fresh game with the given player names and ingredient books.
+     * The shop supply is seeded from the [books] selection so limits are correct
+     * for whichever expansion books were chosen.
+     */
+    fun startGame(
+        playerNames: List<String>,
+        books: Map<ChipColor, IngredientBook> = DEFAULT_BOOKS,
+    ) {
         _state.value = GameState(
             players = playerNames.mapIndexed { i, name -> Player(id = i, name = name) },
             round = 1,
             phase = GamePhase.DRAWING,
+            selectedBooks = books,
+            shopSupply = buildShopSupply(books),
         )
     }
 
@@ -57,7 +66,6 @@ class GameViewModel : ViewModel() {
             val drawn = player.drawnChips + chip
             val exploded = drawn.filter { it.color == ChipColor.WHITE }.sumOf { it.value } >= EXPLOSION_THRESHOLD
             state.updatePlayer(playerId) { it.copy(drawnChips = drawn, hasExploded = exploded) }
-            // Don't auto-advance here — player must resolve explosion first
         }
     }
 
@@ -102,10 +110,7 @@ class GameViewModel : ViewModel() {
                             hasResolved = true,
                         )
                     } else {
-                        it.copy(
-                            coins = it.totalDrawnValue,
-                            hasResolved = true,
-                        )
+                        it.copy(coins = it.totalDrawnValue, hasResolved = true)
                     }
                 }
                 .advanceIfAllDone()
@@ -115,16 +120,21 @@ class GameViewModel : ViewModel() {
     // ─── Shop phase ──────────────────────────────────────────────────────────
 
     /**
-     * Purchase [chip] for [playerId]. Deducts [cost] coins and adds the chip to
-     * the player's bag. No-ops if the player cannot afford it.
+     * Purchase [chip] for [playerId].
+     * Deducts [cost] coins, adds the chip to the player's bag, and decrements
+     * the shared shop supply.  No-ops if the player cannot afford it or the
+     * supply of that chip is exhausted.
      */
     fun buyChip(playerId: Int, chip: Chip, cost: Int) {
         _state.update { state ->
             val player = state.players.getOrNull(playerId) ?: return@update state
-            if (player.coins < cost) return@update state
-            state.updatePlayer(playerId) {
-                it.copy(bag = it.bag + chip, coins = it.coins - cost)
-            }
+            val remaining = state.supplyOf(chip)
+            if (player.coins < cost || remaining <= 0) return@update state
+            state
+                .updatePlayer(playerId) {
+                    it.copy(bag = it.bag + chip, coins = it.coins - cost)
+                }
+                .copy(shopSupply = state.shopSupply + (chip to remaining - 1))
         }
     }
 

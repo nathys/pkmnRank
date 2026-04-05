@@ -22,15 +22,16 @@ enum class ChipColor(
 }
 
 /**
- * A single ingredient chip with a color and pip value (1, 2, or 4).
+ * A single ingredient chip with a color and pip value.
+ * Standard sizes are 1, 2, and 4 (or 3 for some expansion books).
  * White chips use their value as the explosion counter contribution.
  */
 data class Chip(
     val color: ChipColor,
-    val value: Int, // 1, 2, or 4
+    val value: Int,
 ) {
     init {
-        require(value in listOf(1, 2, 4)) { "Chip value must be 1, 2, or 4" }
+        require(value in 1..4) { "Chip value must be between 1 and 4" }
     }
     override fun toString() = "${color.displayName} ($value)"
 }
@@ -50,26 +51,4 @@ val DEFAULT_STARTING_BAG: List<Chip> = listOf(
     Chip(ChipColor.YELLOW, 1),
 )
 
-/**
- * Chips available for purchase in the shop, keyed by cost in coins.
- * Each entry is a (Chip, cost) pair. Players can buy at most one of each
- * ingredient color per shop phase (per standard rules).
- */
-val SHOP_OFFERINGS: List<Pair<Chip, Int>> = listOf(
-    Pair(Chip(ChipColor.WHITE, 1), 10),
-    Pair(Chip(ChipColor.WHITE, 2), 20),
-    Pair(Chip(ChipColor.ORANGE, 1), 10),
-    Pair(Chip(ChipColor.ORANGE, 2), 20),
-    Pair(Chip(ChipColor.GREEN, 1), 10),
-    Pair(Chip(ChipColor.GREEN, 2), 20),
-    Pair(Chip(ChipColor.RED, 1), 10),
-    Pair(Chip(ChipColor.RED, 2), 20),
-    Pair(Chip(ChipColor.YELLOW, 1), 10),
-    Pair(Chip(ChipColor.YELLOW, 2), 20),
-    Pair(Chip(ChipColor.BLUE, 1), 10),
-    Pair(Chip(ChipColor.BLUE, 2), 20),
-    Pair(Chip(ChipColor.PURPLE, 1), 10),
-    Pair(Chip(ChipColor.PURPLE, 2), 20),
-    Pair(Chip(ChipColor.BLACK, 1), 10),
-    Pair(Chip(ChipColor.BLACK, 2), 20),
-)
+// Shop offerings are now defined per ingredient book in IngredientBook.kt.

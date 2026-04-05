@@ -12,22 +12,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import com.nathys.quacks.data.GameState
-import com.nathys.quacks.data.Player
-import com.nathys.quacks.data.SHOP_OFFERINGS
+import com.nathys.quacks.data.*
 import com.nathys.quacks.viewmodel.GameViewModel
 
 /**
- * Shop phase screen. Each player sees their coin balance and a list of chips
- * available to purchase. Uses a horizontal pager so each player can shop
- * independently on the same screen.
+ * Shop phase screen. Each player sees their coin balance and the available chips
+ * for the active ingredient books, with live supply counts.
+ *
+ * Uses a horizontal pager so each player can shop independently. Tabs are also
+ * tappable for quick navigation.
  */
 @Composable
 fun ShopScreen(viewModel: GameViewModel, state: GameState) {
     val pagerState = rememberPagerState(pageCount = { state.players.size })
     val scope = rememberCoroutineScope()
+
+    // Flatten all shop slots from active books, grouped by colour for display
+    val allSlots: List<ShopSlot> = state.selectedBooks.values
+        .sortedBy { it.color.ordinal }
+        .flatMap { it.shopSlots }
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Tab strip — swipe or tap to navigate between players
@@ -41,17 +48,18 @@ fun ShopScreen(viewModel: GameViewModel, state: GameState) {
             }
         }
 
-        // ── Per-player shop page ─────────────────────────────────────────────
         HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
-            PlayerShopPage(player = state.players[page], viewModel = viewModel)
+            PlayerShopPage(
+                player = state.players[page],
+                slots = allSlots,
+                supplyOf = state::supplyOf,
+                viewModel = viewModel,
+            )
         }
 
-        // ── End round button ─────────────────────────────────────────────────
         Button(
             onClick = { viewModel.endRound() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
             Text("End Shop Phase → Round ${state.round + 1}")
         }
@@ -59,13 +67,20 @@ fun ShopScreen(viewModel: GameViewModel, state: GameState) {
 }
 
 /**
- * Shop UI for a single player: shows current coins and all purchasable chips.
+ * Shop UI for a single player.
+ *
+ * @param slots     All purchasable slots from the active ingredient books.
+ * @param supplyOf  Reads remaining supply for a given chip from the shared pool.
  */
 @Composable
-private fun PlayerShopPage(player: Player, viewModel: GameViewModel) {
-    // Track which chip types this player has already bought this round
-    // (the base game allows purchasing one chip of each ingredient colour per round)
-    val purchased = remember(player.id) { mutableStateSetOf<String>() }
+private fun PlayerShopPage(
+    player: Player,
+    slots: List<ShopSlot>,
+    supplyOf: (Chip) -> Int,
+    viewModel: GameViewModel,
+) {
+    // Per-player set of chip keys already bought this round (one per colour per round)
+    val purchasedColors = remember(player.id) { mutableStateSetOf<ChipColor>() }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // Coin balance header
@@ -84,50 +99,101 @@ private fun PlayerShopPage(player: Player, viewModel: GameViewModel) {
         }
 
         Spacer(Modifier.height(12.dp))
-        Text("Buy chips (one per colour)", style = MaterialTheme.typography.labelLarge)
+        Text("Buy chips (one colour per round)", style = MaterialTheme.typography.labelLarge)
         Spacer(Modifier.height(8.dp))
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(SHOP_OFFERINGS, key = { "${it.first.color}-${it.first.value}" }) { (chip, cost) ->
-                val key = "${chip.color}-${chip.value}"
-                val alreadyBought = purchased.contains(key)
-                val canAfford = player.coins >= cost
+            items(slots, key = { "${it.chip.color}-${it.chip.value}" }) { slot ->
+                val supply = supplyOf(slot.chip)
+                val colorBought = purchasedColors.contains(slot.chip.color)
+                val canAfford = player.coins >= slot.cost
+                val soldOut = supply <= 0
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    // Chip visual + label
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        ChipBadge(chip = chip, modifier = Modifier.size(48.dp))
-                        Column {
-                            Text(chip.color.displayName, style = MaterialTheme.typography.bodyLarge)
-                            Text("Value ${chip.value}", style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
-                        }
-                    }
+                ShopRow(
+                    slot = slot,
+                    supply = supply,
+                    enabled = canAfford && !colorBought && !soldOut,
+                    label = when {
+                        soldOut -> "Sold out"
+                        colorBought -> "Bought"
+                        else -> "Buy"
+                    },
+                    onBuy = {
+                        viewModel.buyChip(player.id, slot.chip, slot.cost)
+                        purchasedColors.add(slot.chip.color)
+                    },
+                )
+            }
+        }
+    }
+}
 
-                    // Price + buy button
-                    Column(horizontalAlignment = Alignment.End) {
-                        Text("${cost}¢", style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary)
-                        Spacer(Modifier.height(4.dp))
-                        Button(
-                            onClick = {
-                                viewModel.buyChip(player.id, chip, cost)
-                                purchased.add(key)
-                            },
-                            enabled = canAfford && !alreadyBought,
-                        ) {
-                            Text(if (alreadyBought) "Bought" else "Buy")
-                        }
-                    }
-                }
+@Composable
+private fun ShopRow(
+    slot: ShopSlot,
+    supply: Int,
+    enabled: Boolean,
+    label: String,
+    onBuy: () -> Unit,
+) {
+    val soldOut = supply <= 0
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(
+                if (soldOut) MaterialTheme.colorScheme.surface.copy(alpha = 0.4f)
+                else MaterialTheme.colorScheme.surface
+            )
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        // Chip badge + ingredient name
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            ChipBadge(
+                chip = slot.chip,
+                modifier = Modifier.size(48.dp),
+            )
+            Column {
+                Text(
+                    slot.chip.color.displayName,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (soldOut) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                            else MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    "Value ${slot.chip.value}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                )
+            }
+        }
+
+        // Supply count + price + buy button
+        Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            // Supply remaining pill
+            Text(
+                text = if (soldOut) "SOLD OUT" else "$supply left",
+                style = MaterialTheme.typography.labelSmall,
+                color = when {
+                    soldOut -> Color(0xFFD32F2F)
+                    supply <= 2 -> Color(0xFFFF6F00)
+                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                },
+                textAlign = TextAlign.End,
+            )
+            Text(
+                "${slot.cost}¢",
+                style = MaterialTheme.typography.titleMedium,
+                color = if (soldOut) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                        else MaterialTheme.colorScheme.primary,
+            )
+            Button(
+                onClick = onBuy,
+                enabled = enabled,
+            ) {
+                Text(label, style = MaterialTheme.typography.labelMedium)
             }
         }
     }
