@@ -11,6 +11,8 @@ package com.nathys.quacks.data
  * @param coins        Coins earned this round (used in shop phase).
  * @param rubies       Rubies accumulated (used to buy extra drops/turns).
  * @param hasExploded  Whether the pot exploded this round (white pips >= threshold).
+ * @param isStopped    True when the player voluntarily chose to stop drawing.
+ * @param hasResolved  True when an exploded player has made their pot/coins choice.
  */
 data class Player(
     val id: Int,
@@ -21,7 +23,16 @@ data class Player(
     val coins: Int = 0,
     val rubies: Int = 0,
     val hasExploded: Boolean = false,
+    val isStopped: Boolean = false,
+    val hasResolved: Boolean = false,
 ) {
+    /**
+     * Player is done for the round once they stopped voluntarily, or exploded
+     * and resolved the pot-vs-coins penalty.
+     */
+    val isDoneDrawing: Boolean
+        get() = isStopped || (hasExploded && hasResolved)
+
     /** Chips still in the bag (not yet drawn this round). */
     val remainingChips: List<Chip>
         get() = bag.toMutableList().also { remaining ->

@@ -4,11 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -25,143 +23,250 @@ import com.nathys.quacks.viewmodel.GameViewModel
 import kotlin.math.roundToInt
 
 /**
- * Drawing phase screen. Shows the active player's bag contents, drawn chips,
- * explosion meter, and risk probability. Players tap a chip to "draw" it.
+ * Drawing phase — all players are shown simultaneously and can interact
+ * independently. Android's touch dispatch routes each finger to its own
+ * composable, so simultaneous multi-touch draws "just work" as long as
+ * player sections are separate composable trees (which they are here).
+ *
+ * Layout:
+ *   1 player  → full screen
+ *   2 players → left | right
+ *   3 players → top-left | top-right / bottom (full width)
+ *   4 players → top-left | top-right / bottom-left | bottom-right
  */
 @Composable
-fun DrawingScreen(viewModel: GameViewModel, state: com.nathys.quacks.data.GameState) {
-    val player = state.currentPlayer ?: return
-    var showExplosionDialog by remember(player.id, player.hasExploded) {
-        mutableStateOf(player.hasExploded)
+fun DrawingScreen(viewModel: GameViewModel, state: GameState) {
+    val players = state.players
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Round header
+        Text(
+            text = "Round ${state.round}  ·  Draw phase",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 16.dp, vertical = 6.dp),
+        )
+
+        // Split-screen grid
+        when (players.size) {
+            1 -> PlayerDrawArea(players[0], viewModel, Modifier.fillMaxSize())
+            2 -> Row(Modifier.fillMaxSize()) {
+                PlayerDrawArea(players[0], viewModel, Modifier.weight(1f).fillMaxHeight())
+                VerticalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.outline)
+                PlayerDrawArea(players[1], viewModel, Modifier.weight(1f).fillMaxHeight())
+            }
+            3 -> Column(Modifier.fillMaxSize()) {
+                Row(Modifier.weight(1f).fillMaxWidth()) {
+                    PlayerDrawArea(players[0], viewModel, Modifier.weight(1f).fillMaxHeight())
+                    VerticalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.outline)
+                    PlayerDrawArea(players[1], viewModel, Modifier.weight(1f).fillMaxHeight())
+                }
+                HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.outline)
+                PlayerDrawArea(players[2], viewModel, Modifier.weight(1f).fillMaxWidth())
+            }
+            4 -> Column(Modifier.fillMaxSize()) {
+                Row(Modifier.weight(1f).fillMaxWidth()) {
+                    PlayerDrawArea(players[0], viewModel, Modifier.weight(1f).fillMaxHeight())
+                    VerticalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.outline)
+                    PlayerDrawArea(players[1], viewModel, Modifier.weight(1f).fillMaxHeight())
+                }
+                HorizontalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.outline)
+                Row(Modifier.weight(1f).fillMaxWidth()) {
+                    PlayerDrawArea(players[2], viewModel, Modifier.weight(1f).fillMaxHeight())
+                    VerticalDivider(thickness = 2.dp, color = MaterialTheme.colorScheme.outline)
+                    PlayerDrawArea(players[3], viewModel, Modifier.weight(1f).fillMaxHeight())
+                }
+            }
+        }
+    }
+}
+
+/**
+ * One player's drawing area. Shows a different UI depending on their state:
+ *   - Active drawing: bag chip grid + explosion meter + stop button
+ *   - Exploded (unresolved): explosion resolution buttons
+ *   - Done: round summary
+ *
+ * Each instance is a separate composable tree, so touch events dispatched here
+ * are fully independent from other players' areas (multi-touch safe).
+ */
+@Composable
+private fun PlayerDrawArea(player: Player, viewModel: GameViewModel, modifier: Modifier = Modifier) {
+    // Tint the entire area red when exploded, green when safely stopped
+    val bgTint = when {
+        player.hasExploded && !player.hasResolved -> Color(0xFF3D0000)
+        player.isStopped -> Color(0xFF003D00)
+        else -> MaterialTheme.colorScheme.background
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = modifier
+            .background(bgTint)
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        // ── Header ───────────────────────────────────────────────────────────
+        // Player name
         Text(
-            "Round ${state.round}  ·  ${player.name}'s turn",
-            style = MaterialTheme.typography.titleLarge,
+            text = player.name,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
         )
 
-        // ── Explosion meter ──────────────────────────────────────────────────
-        ExplosionMeter(
-            whitePips = player.whitePipTotal,
-            threshold = EXPLOSION_THRESHOLD,
-            risk = player.explosionRisk,
-        )
-
-        // ── Drawn chips ──────────────────────────────────────────────────────
-        Text("Drawn (${player.drawnChips.size} chips · ${player.totalDrawnValue} pips)",
-            style = MaterialTheme.typography.labelLarge)
-        if (player.drawnChips.isEmpty()) {
-            Text("No chips drawn yet", style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
-        } else {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                items(player.drawnChips) { chip -> ChipBadge(chip = chip) }
-            }
+        when {
+            // Exploded — awaiting resolution
+            player.hasExploded && !player.hasResolved -> ExplosionResolutionArea(player, viewModel)
+            // Done for this round
+            player.isDoneDrawing -> RoundSummaryArea(player)
+            // Active drawing
+            else -> ActiveDrawArea(player, viewModel)
         }
+    }
+}
 
-        Divider()
+// ── Active drawing ─────────────────────────────────────────────────────────────
 
-        // ── Remaining bag ────────────────────────────────────────────────────
-        val remaining = player.remainingChips
-        Text("Bag (${remaining.size} chips) — tap to draw",
-            style = MaterialTheme.typography.labelLarge)
+@Composable
+private fun ActiveDrawArea(player: Player, viewModel: GameViewModel) {
+    ExplosionMeter(
+        whitePips = player.whitePipTotal,
+        threshold = EXPLOSION_THRESHOLD,
+        risk = player.explosionRisk,
+    )
 
+    Text(
+        text = "${player.drawnChips.size} drawn · ${player.totalDrawnValue} pips",
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+    )
+
+    // Bag chips grouped by type; tapping draws one instance of that chip.
+    // userScrollEnabled = false prevents the inner grid from stealing swipe
+    // gestures away from sibling player areas in split-screen.
+    val grouped = player.remainingChips.groupBy { it }
+    if (grouped.isEmpty()) {
+        Text(
+            "Bag empty",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+        )
+    } else {
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(72.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            columns = GridCells.Adaptive(52.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.weight(1f),
+            userScrollEnabled = false,
         ) {
-            // Group identical chips to avoid overwhelming the grid; tapping draws one
-            val grouped = remaining.groupBy { it }
             items(grouped.entries.toList(), key = { "${it.key.color}-${it.key.value}" }) { (chip, group) ->
                 ChipBadge(
                     chip = chip,
                     count = group.size,
-                    modifier = Modifier.clickable(enabled = !player.hasExploded) {
-                        viewModel.drawChip(chip)
-                    },
+                    modifier = Modifier
+                        .size(52.dp)
+                        // Each chip's clickable is its own gesture scope — multi-touch safe
+                        .clickable { viewModel.drawChip(player.id, chip) },
                 )
             }
         }
-
-        // ── Stop button ──────────────────────────────────────────────────────
-        Button(
-            onClick = { viewModel.stopDrawing() },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = player.drawnChips.isNotEmpty() && !player.hasExploded,
-        ) {
-            Text("Stop Drawing")
-        }
     }
 
-    // ── Explosion dialog ─────────────────────────────────────────────────────
-    if (showExplosionDialog) {
-        AlertDialog(
-            onDismissRequest = {},
-            title = { Text("BOOM! ${player.name}'s pot exploded!") },
-            text = {
-                Text(
-                    "White pip total: ${player.whitePipTotal} / $EXPLOSION_THRESHOLD\n\n" +
-                    "Choose one:\n" +
-                    "• Advance pot ${player.totalDrawnValue} spaces (no coins)\n" +
-                    "• Take ${player.totalDrawnValue} coins (pot stays)",
-                )
-            },
-            confirmButton = {
-                Button(onClick = {
-                    showExplosionDialog = false
-                    viewModel.resolveExplosion(takePotPoints = true)
-                }) { Text("Advance pot") }
-            },
-            dismissButton = {
-                OutlinedButton(onClick = {
-                    showExplosionDialog = false
-                    viewModel.resolveExplosion(takePotPoints = false)
-                }) { Text("Take coins") }
-            },
-        )
+    Button(
+        onClick = { viewModel.stopDrawing(player.id) },
+        enabled = player.drawnChips.isNotEmpty(),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text("Stop", style = MaterialTheme.typography.labelMedium)
     }
 }
 
-// ── Reusable composables ─────────────────────────────────────────────────────
+// ── Explosion resolution ───────────────────────────────────────────────────────
+
+@Composable
+private fun ExplosionResolutionArea(player: Player, viewModel: GameViewModel) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            "BOOM!",
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color(0xFFFF5252),
+            fontWeight = FontWeight.Bold,
+        )
+        Text(
+            "White: ${player.whitePipTotal} / $EXPLOSION_THRESHOLD",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+        )
+        Spacer(Modifier.height(8.dp))
+        Text("Choose one:", style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+        Spacer(Modifier.height(8.dp))
+        Button(
+            onClick = { viewModel.resolveExplosion(player.id, takePotPoints = true) },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("+${player.totalDrawnValue} pot", style = MaterialTheme.typography.labelMedium)
+        }
+        OutlinedButton(
+            onClick = { viewModel.resolveExplosion(player.id, takePotPoints = false) },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text("+${player.totalDrawnValue} coins", style = MaterialTheme.typography.labelMedium)
+        }
+    }
+}
+
+// ── Round summary (done) ───────────────────────────────────────────────────────
+
+@Composable
+private fun RoundSummaryArea(player: Player) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            if (player.hasExploded) "Exploded" else "Stopped",
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (player.hasExploded) Color(0xFFFF5252) else Color(0xFF66BB6A),
+        )
+        Spacer(Modifier.height(4.dp))
+        Text("Pot: ${player.potPosition}", style = MaterialTheme.typography.bodySmall)
+        Text("Coins: ${player.coins}", style = MaterialTheme.typography.bodySmall)
+    }
+}
+
+// ── Shared composables ─────────────────────────────────────────────────────────
 
 /**
- * Visual explosion meter showing current white pip total vs the threshold,
- * plus a colour-coded risk percentage.
+ * Visual explosion meter: progress bar showing white pip total vs threshold,
+ * plus a colour-coded explosion risk percentage.
  */
 @Composable
-private fun ExplosionMeter(whitePips: Int, threshold: Int, risk: Float) {
+fun ExplosionMeter(whitePips: Int, threshold: Int, risk: Float) {
     val fraction = (whitePips.toFloat() / threshold).coerceIn(0f, 1f)
     val barColor = when {
-        fraction >= 1f -> Color(0xFFD32F2F)  // exploded
-        fraction >= 0.7f -> Color(0xFFFF6F00) // danger
-        else -> Color(0xFF388E3C)             // safe
+        fraction >= 1f -> Color(0xFFD32F2F)
+        fraction >= 0.7f -> Color(0xFFFF6F00)
+        else -> Color(0xFF388E3C)
     }
-
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text("Cherry bombs: $whitePips / $threshold", style = MaterialTheme.typography.bodyMedium)
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text("$whitePips/$threshold 💣", style = MaterialTheme.typography.labelSmall)
             Text(
-                "Explosion risk: ${(risk * 100).roundToInt()}%",
-                style = MaterialTheme.typography.bodyMedium,
+                "${(risk * 100).roundToInt()}% risk",
+                style = MaterialTheme.typography.labelSmall,
                 color = if (risk > 0.5f) Color(0xFFFF6F00) else MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold,
+                fontWeight = if (risk > 0.5f) FontWeight.Bold else FontWeight.Normal,
             )
         }
         LinearProgressIndicator(
             progress = { fraction },
-            modifier = Modifier.fillMaxWidth().height(12.dp).clip(RoundedCornerShape(6.dp)),
+            modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
             color = barColor,
             trackColor = MaterialTheme.colorScheme.surface,
         )
@@ -169,23 +274,23 @@ private fun ExplosionMeter(whitePips: Int, threshold: Int, risk: Float) {
 }
 
 /**
- * Coloured circular badge representing a chip. Optionally shows a count overlay.
+ * Coloured circular chip badge. Shows pip value and optional count overlay.
+ * Sizing is controlled by the caller via [modifier].
  */
 @Composable
 fun ChipBadge(chip: Chip, count: Int = 1, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .size(64.dp)
             .clip(CircleShape)
             .background(chip.color.color)
-            .border(1.dp, Color.White.copy(alpha = 0.3f), CircleShape),
+            .border(1.dp, Color.White.copy(alpha = 0.25f), CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = "${chip.value}",
                 color = chip.color.textColor,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
             )
             if (count > 1) {

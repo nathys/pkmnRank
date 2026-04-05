@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import com.nathys.quacks.data.GameState
 import com.nathys.quacks.data.Player
 import com.nathys.quacks.data.SHOP_OFFERINGS
@@ -26,14 +27,15 @@ import com.nathys.quacks.viewmodel.GameViewModel
 @Composable
 fun ShopScreen(viewModel: GameViewModel, state: GameState) {
     val pagerState = rememberPagerState(pageCount = { state.players.size })
+    val scope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // ── Tab strip showing player names ───────────────────────────────────
+        // Tab strip — swipe or tap to navigate between players
         ScrollableTabRow(selectedTabIndex = pagerState.currentPage, edgePadding = 0.dp) {
             state.players.forEachIndexed { index, player ->
                 Tab(
                     selected = pagerState.currentPage == index,
-                    onClick = { /* controlled by pager swipe */ },
+                    onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
                     text = { Text("${player.name}\n${player.coins}¢") },
                 )
             }

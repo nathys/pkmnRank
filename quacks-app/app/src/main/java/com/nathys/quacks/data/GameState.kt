@@ -5,28 +5,24 @@ package com.nathys.quacks.data
  */
 enum class GamePhase {
     SETUP,      // Configuring players before the game starts
-    DRAWING,    // Active round: players pull chips from their bags
+    DRAWING,    // Active round: all players pull chips simultaneously
     SHOP,       // Post-round: players spend coins on new chips
 }
 
 /**
  * Immutable snapshot of the full game state.
+ * All players draw simultaneously — there is no activePlayer concept.
  *
- * @param players       All players in turn order.
- * @param round         Current round number (1-indexed).
- * @param phase         Which phase the game is currently in.
- * @param activePlayer  Index into [players] for whose turn it is during DRAWING phase.
+ * @param players All players in the game.
+ * @param round   Current round number (1-indexed).
+ * @param phase   Which phase the game is currently in.
  */
 data class GameState(
     val players: List<Player> = emptyList(),
     val round: Int = 1,
     val phase: GamePhase = GamePhase.SETUP,
-    val activePlayer: Int = 0,
 ) {
-    val currentPlayer: Player?
-        get() = players.getOrNull(activePlayer)
-
-    /** True when every player has either stopped drawing or exploded this round. */
+    /** True when every player has finished drawing (stopped or resolved explosion). */
     val allPlayersDone: Boolean
-        get() = players.all { it.hasExploded || it.drawnChips.isNotEmpty() }
+        get() = players.isNotEmpty() && players.all { it.isDoneDrawing }
 }
