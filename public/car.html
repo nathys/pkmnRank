@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Listing</title>
+  <link rel="stylesheet" href="/car-style.css">
+</head>
+<body>
+
+  <div id="loading-screen" class="loading-screen">
+    <div class="spinner"></div>
+    <p>Loading listing…</p>
+  </div>
+
+  <div id="error-screen" class="hidden">
+    <div class="error-card">
+      <div class="error-icon">🚫</div>
+      <h1>Listing Not Found</h1>
+      <p>This listing may have been removed or the link is invalid.</p>
+    </div>
+  </div>
+
+  <div id="listing-view" class="hidden">
+
+    <!-- Photo Gallery -->
+    <div class="gallery-wrap" id="gallery-wrap">
+      <div class="gallery-main">
+        <img id="gallery-main-img" src="" alt="Car photo">
+        <button class="gallery-nav prev" id="gallery-prev">&#8249;</button>
+        <button class="gallery-nav next" id="gallery-next">&#8250;</button>
+        <div class="gallery-counter">
+          <span id="photo-current">1</span> / <span id="photo-total">1</span>
+        </div>
+      </div>
+      <div class="gallery-thumbs" id="gallery-thumbs"></div>
+    </div>
+
+    <div class="listing-content">
+
+      <!-- Header: title + price -->
+      <div class="listing-header">
+        <div class="listing-title-wrap">
+          <h1 id="listing-title"></h1>
+          <div class="listing-meta">
+            <span id="listing-condition" class="badge-condition"></span>
+            <span id="listing-location" class="listing-location"></span>
+          </div>
+        </div>
+        <div class="listing-price-wrap">
+          <div class="listing-price" id="listing-price"></div>
+          <div class="negotiable-badge hidden" id="negotiable-badge">Negotiable</div>
+        </div>
+      </div>
+
+      <!-- Specs -->
+      <section class="specs-section">
+        <h2>Vehicle Details</h2>
+        <div class="specs-grid" id="specs-grid"></div>
+      </section>
+
+      <!-- Description -->
+      <section class="desc-section hidden" id="desc-section">
+        <h2>Description</h2>
+        <div class="desc-text" id="desc-text"></div>
+      </section>
+
+      <!-- Contact -->
+      <section class="contact-section hidden" id="contact-section">
+        <h2>Contact Seller</h2>
+        <div class="contact-card">
+          <div class="contact-avatar" id="contact-avatar"></div>
+          <div class="contact-info">
+            <p class="contact-name" id="contact-name"></p>
+            <div class="contact-actions" id="contact-actions"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Share -->
+      <section class="share-section">
+        <h2>Share This Listing</h2>
+        <div class="share-layout">
+          <div id="share-qr"></div>
+          <div class="share-text">
+            <p>Scan or share the link below to send this listing to anyone.</p>
+            <div class="copy-row">
+              <input type="text" id="share-url" readonly>
+              <button id="share-copy-btn" class="btn-ghost btn-sm">Copy Link</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="/car.js"></script>
+</body>
+</html>

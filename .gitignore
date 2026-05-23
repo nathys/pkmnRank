@@ -1,3 +1,10 @@
 node_modules/
-db/ratings.json
 .DS_Store
+# local dev data — never commit user content
+db/ratings.json
+db/carlistings.json
+db/car_photos/
+public/uploads/
+# build artifacts
+.wrangler/
+.claude/

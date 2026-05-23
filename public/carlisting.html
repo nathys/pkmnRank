@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listing Manager</title>
+  <link rel="stylesheet" href="car-style.css">
+</head>
+<body>
+
+  <!-- Welcome / init screen -->
+  <div id="welcome-screen">
+    <div class="welcome-card">
+      <div class="welcome-icon">🚗</div>
+      <h1>List Your Car For Sale</h1>
+      <p>Create a free listing and get a shareable QR code so buyers can view your car's full details.</p>
+      <button id="create-btn" class="btn-primary btn-lg">Create New Listing</button>
+
+      <div id="resume-section" class="hidden">
+        <div class="divider"><span>or</span></div>
+        <div class="resume-card">
+          <h3>Continue Editing</h3>
+          <p id="resume-desc"></p>
+          <button id="resume-btn" class="btn-secondary">Resume Editing</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Management UI -->
+  <div id="manager" class="hidden">
+
+    <header class="manager-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <span class="header-icon">🚗</span>
+          <div>
+            <h1>Listing Manager</h1>
+            <p class="listing-id-label">ID: <span id="listing-id-display"></span></p>
+          </div>
+        </div>
+        <div class="header-right">
+          <a id="view-public-link" href="#" target="_blank" class="btn-ghost">View Public Page ↗</a>
+          <button id="save-btn" class="btn-primary">Save Changes</button>
+        </div>
+      </div>
+      <div id="save-status" class="save-status"></div>
+    </header>
+
+    <main class="manager-main">
+
+      <!-- Photos -->
+      <section class="section">
+        <h2 class="section-title">Photos</h2>
+        <p class="section-desc">Upload up to 20 photos. The first photo is used as the cover image.</p>
+        <div id="photo-grid" class="photo-grid"></div>
+        <label class="upload-zone" id="upload-zone">
+          <input type="file" id="photo-input" multiple accept="image/*" class="hidden">
+          <div class="upload-zone-content">
+            <div class="upload-icon">📷</div>
+            <p class="upload-primary">Click to add photos</p>
+            <p class="upload-secondary">or drag and drop here</p>
+            <p class="upload-hint">JPEG · PNG · WebP — max 10 MB each</p>
+          </div>
+        </label>
+        <div id="upload-progress" class="hidden">
+          <div class="progress-bar-wrap"><div id="upload-bar" class="progress-bar-fill"></div></div>
+          <p id="upload-status-text"></p>
+        </div>
+      </section>
+
+      <!-- Car Details -->
+      <section class="section">
+        <h2 class="section-title">Car Details</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label>Year</label>
+            <input type="number" id="f-year" placeholder="e.g. 2021" min="1886" max="2027">
+          </div>
+          <div class="field">
+            <label>Make</label>
+            <input type="text" id="f-make" placeholder="e.g. Toyota">
+          </div>
+          <div class="field">
+            <label>Model</label>
+            <input type="text" id="f-model" placeholder="e.g. Camry">
+          </div>
+          <div class="field">
+            <label>Trim <span class="optional">(optional)</span></label>
+            <input type="text" id="f-trim" placeholder="e.g. XSE">
+          </div>
+          <div class="field">
+            <label>Mileage</label>
+            <input type="number" id="f-mileage" placeholder="e.g. 45000" min="0">
+          </div>
+          <div class="field">
+            <label>Color</label>
+            <input type="text" id="f-color" placeholder="e.g. Midnight Blue">
+          </div>
+          <div class="field">
+            <label>Condition</label>
+            <select id="f-condition">
+              <option value="">Select…</option>
+              <option>Excellent</option>
+              <option>Good</option>
+              <option>Fair</option>
+              <option>Poor</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Transmission</label>
+            <select id="f-transmission">
+              <option value="">Select…</option>
+              <option>Automatic</option>
+              <option>Manual</option>
+              <option>CVT</option>
+              <option>Dual-Clutch (DCT)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fuel Type</label>
+            <select id="f-fuelType">
+              <option value="">Select…</option>
+              <option>Gasoline</option>
+              <option>Diesel</option>
+              <option>Electric</option>
+              <option>Hybrid</option>
+              <option>Plug-In Hybrid</option>
+              <option>Hydrogen</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Drivetrain</label>
+            <select id="f-drivetrain">
+              <option value="">Select…</option>
+              <option>FWD</option>
+              <option>RWD</option>
+              <option>AWD</option>
+              <option>4WD</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>VIN <span class="optional">(optional)</span></label>
+            <input type="text" id="f-vin" placeholder="17-character VIN" maxlength="17">
+          </div>
+          <div class="field">
+            <label>Location</label>
+            <input type="text" id="f-location" placeholder="e.g. San Diego, CA">
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing -->
+      <section class="section">
+        <h2 class="section-title">Pricing</h2>
+        <div class="form-grid form-grid-narrow">
+          <div class="field">
+            <label>Asking Price ($)</label>
+            <input type="number" id="f-price" placeholder="e.g. 24500" min="0">
+          </div>
+          <div class="field field-checkbox">
+            <label class="checkbox-label">
+              <input type="checkbox" id="f-negotiable">
+              <span>Price is negotiable</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Description -->
+      <section class="section">
+        <h2 class="section-title">Description</h2>
+        <div class="field">
+          <label>Tell buyers about your car</label>
+          <textarea id="f-description" rows="7" placeholder="Describe the car's history, modifications, recent maintenance, any known issues, and why you're selling…"></textarea>
+          <p class="field-hint"><span id="desc-count">0</span> characters</p>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section class="section">
+        <h2 class="section-title">Contact Information</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label>Your Name</label>
+            <input type="text" id="f-contactName" placeholder="e.g. John Smith">
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <input type="tel" id="f-contactPhone" placeholder="e.g. (555) 123-4567">
+          </div>
+          <div class="field field-wide">
+            <label>Email Address</label>
+            <input type="email" id="f-contactEmail" placeholder="e.g. john@example.com">
+          </div>
+        </div>
+      </section>
+
+      <!-- QR Code -->
+      <section class="section section-qr">
+        <h2 class="section-title">Your QR Code</h2>
+        <p class="section-desc">Share this QR code or link so buyers can view your listing from any device.</p>
+        <div class="qr-layout">
+          <div class="qr-box">
+            <div id="qr-code"></div>
+            <button id="qr-download-btn" class="btn-secondary btn-sm">Download QR Code</button>
+          </div>
+          <div class="qr-info">
+            <label>Public Listing URL</label>
+            <div class="copy-row">
+              <input type="text" id="public-url" readonly>
+              <button id="copy-url-btn" class="btn-ghost btn-sm">Copy</button>
+            </div>
+            <p class="qr-hint">Print this QR code and place it on your windshield so potential buyers can scan it for full details, photos, and your contact info.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <div class="manager-footer">
+        <button id="save-btn-2" class="btn-primary btn-lg">Save All Changes</button>
+        <p class="footer-note">Your listing credentials are stored in this browser. Don't clear site data or you'll lose edit access.</p>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="carlisting.js"></script>
+</body>
+</html>
