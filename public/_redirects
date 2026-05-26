@@ -1,0 +1,2 @@
+# Serve the car listing public view for any /car/:id URL
+/car/*  /car.html  200
