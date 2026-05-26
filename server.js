@@ -17,7 +17,7 @@ app.use('/api/car', carListingsRoutes);
 
 // Serve the public listing view for /car/:id
 app.get('/car/:id', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'car.html'));
+  res.sendFile(path.join(__dirname, 'public', 'car-view.html'));
 });
 
 app.listen(PORT, () => {
