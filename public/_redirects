@@ -1,2 +1,2 @@
-# Serve the car listing public view for any /car/:id URL
-/car/*  /car-view.html  200
+# /car/:id is handled by functions/car/[id].js (Pages Function)
+# which serves car-view.html via env.ASSETS without any redirect.
